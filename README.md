@@ -1,2 +1,3 @@
-# docker-redaxo
-Docker container for REDAXO
+# Docker image for REDAXO, provided by the community
+
+Soon.
