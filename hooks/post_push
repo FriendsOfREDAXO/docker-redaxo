@@ -1,4 +1,5 @@
-docker tag $IMAGE_NAME $DOCKER_REPO:foobar
-docker tag $IMAGE_NAME $DOCKER_REPO:foobar2
-docker push $DOCKER_REPO:foobar
-docker push $DOCKER_REPO:foobar2
+#!/bin/bash
+set -e
+
+docker tag $IMAGE_NAME ${DOCKER_REPO:foobar}
+docker push ${DOCKER_REPO:foobar}
