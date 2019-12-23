@@ -18,16 +18,16 @@ sha1=4f5175cdb55226e4f3fd8a34688e4199c9731062
 # collect php versions from our folder structure
 phpVersions=( "$@" )
 if [ ${#phpVersions[@]} -eq 0 ]; then
-	phpVersions=( php*.*/ )
+    phpVersions=( php*.*/ )
 fi
 phpVersions=( "${phpVersions[@]%/}" )
 
 # declare image variants
 declare -A variantCmds=(
-	[apache]='apache2-foreground'
+    [apache]='apache2-foreground'
 )
 declare -A variantBases=(
-	[apache]='debian'
+    [apache]='debian'
 )
 
 # bring out debug infos
