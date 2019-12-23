@@ -39,21 +39,21 @@ for phpVersion in "${phpVersions[@]}"; do
 	phpVersionDir="$phpVersion"
 	phpVersion="${phpVersion#php}"
 
-  # loop through image variants
-	for variant in apache; do
+    # loop through image variants
+    for variant in apache; do
 
-    # declare and make directory for given PHP version and image variant
-		dir="$phpVersionDir/$variant"
-		mkdir -p "$dir"
+        # declare and make directory for given PHP version and image variant
+        dir="$phpVersionDir/$variant"
+        mkdir -p "$dir"
 
-    # declare cmd and base for current version
-		cmd="${variantCmds[$variant]}"
-		base="${variantBases[$variant]}"
+        # declare cmd and base for current version
+        cmd="${variantCmds[$variant]}"
+        base="${variantBases[$variant]}"
 
-    # bring out debug infos
-    echo "- PHP $phpVersion $variant [base: $base] [cmd: $cmd]"
+        # bring out debug infos
+        echo "- PHP $phpVersion $variant [base: $base] [cmd: $cmd]"
 
-    # generate Dockerfile from template, replace placeholders
+        # generate Dockerfile from template, replace placeholders
 		sed -E \
 			-e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
 			-e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
@@ -62,10 +62,10 @@ for phpVersion in "${phpVersions[@]}"; do
 			-e 's!%%CMD%%!'"$cmd"'!g' \
 			"Dockerfile-${base}.template" > "$dir/Dockerfile"
 
-    # copy entrypoint file
+        # copy entrypoint file
 		cp -a docker-entrypoint.sh "$dir/docker-entrypoint.sh"
 
-    # add variant to travis config variable
+        # add variant to travis config variable
 		travisEnv+='\n  - VARIANT='"$dir"
 	done
 done
