@@ -36,8 +36,8 @@ echo "REDAXO $latest"
 travisEnv=
 # loop through given PHP versions
 for phpVersion in "${phpVersions[@]}"; do
-	phpVersionDir="$phpVersion"
-	phpVersion="${phpVersion#php}"
+    phpVersionDir="$phpVersion"
+    phpVersion="${phpVersion#php}"
 
     # loop through image variants
     for variant in apache; do
@@ -54,20 +54,20 @@ for phpVersion in "${phpVersions[@]}"; do
         echo "- PHP $phpVersion $variant [base: $base] [cmd: $cmd]"
 
         # generate Dockerfile from template, replace placeholders
-		sed -E \
-			-e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
-			-e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
-			-e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
-			-e 's!%%VARIANT%%!'"$variant"'!g' \
-			-e 's!%%CMD%%!'"$cmd"'!g' \
-			"Dockerfile-${base}.template" > "$dir/Dockerfile"
+        sed -E \
+            -e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
+            -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
+            -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
+            -e 's!%%VARIANT%%!'"$variant"'!g' \
+            -e 's!%%CMD%%!'"$cmd"'!g' \
+            "Dockerfile-${base}.template" > "$dir/Dockerfile"
 
         # copy entrypoint file
-		cp -a docker-entrypoint.sh "$dir/docker-entrypoint.sh"
+        cp -a docker-entrypoint.sh "$dir/docker-entrypoint.sh"
 
         # add variant to travis config variable
-		travisEnv+='\n  - VARIANT='"$dir"
-	done
+        travisEnv+='\n  - VARIANT='"$dir"
+    done
 done
 
 # TODO: update travis config file
