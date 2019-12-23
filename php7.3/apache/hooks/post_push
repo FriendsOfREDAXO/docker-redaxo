@@ -1,2 +1,7 @@
+#!/bin/bash
+set -e
+
 docker tag $IMAGE_NAME $DOCKER_REPO:blabla
 docker push $DOCKER_REPO:blabla
+
+echo "blabla"
