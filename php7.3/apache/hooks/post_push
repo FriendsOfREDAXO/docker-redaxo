@@ -1,7 +1,28 @@
 #!/bin/bash
 set -e
 
-docker tag $IMAGE_NAME $DOCKER_REPO:blabla
-docker push $DOCKER_REPO:blabla
 
-echo "blabla"
+# What is this post_push.sh?
+# It's the template for the post_push hook we use to push all image tags to Docker Hub.
+# https://docs.docker.com/docker-hub/builds/advanced/#custom-build-phase-hooks
+
+# We provide these individual tags:
+
+# X.X.X-phpX.X-apache
+# X.X  -phpX.X-apache
+# X    -phpX.X-apache
+
+# We also provide general tags based on the default PHP version and the default variant:
+
+# X.X.X
+# X.X
+# X
+
+
+for tag in 5.8.1-php7.3-apache 5.8.1 5.8-php7.3-apache 5.8 5-php7.3-apache 5; do
+
+    docker tag $IMAGE_NAME $DOCKER_REPO:$tag
+    docker push $DOCKER_REPO:$tag
+
+    echo "$DOCKER_REPO:$tag"
+done
