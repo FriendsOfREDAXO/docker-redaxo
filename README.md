@@ -1,14 +1,16 @@
-# Docker image for REDAXO, provided by the community
+# Docker community image for REDAXO
 
 There’s no official Docker image for REDAXO yet, but this one represents the __»official« community image__. It is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
 
 ## Supported tags
 
-Tag notation follows this scheme: `REDAXO-PHP-Variant`.
+Tags follow this scheme: `REDAXO-PHP-Variant`.
 
 * __REDAXO version__ can include major, feature or hotfix releases, such as: `5`, `5.8`, `5.8.1`.
 * __PHP versions__: `php7.2`, `php7.3` _(default)_, `php7.4`
 * __Variants__: `apache` _(default)_
+
+As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (7.3) and the default variant (Apache).
 
 Examples:
 
