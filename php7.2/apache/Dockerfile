@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:7.2-apache
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
@@ -23,7 +23,6 @@ RUN set -ex; \
         libjpeg-dev \
         libpng-dev \
         libmcrypt-dev \
-        libzip-dev \
     ; \
     \
     # install and configure via docker-php-ext
