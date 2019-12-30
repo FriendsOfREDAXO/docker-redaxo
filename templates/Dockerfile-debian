@@ -2,11 +2,11 @@ FROM php:%%PHP_VERSION%%-%%VARIANT%%
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --quiet --no-install-recommends \
-		unzip \
-	; \
-	rm -rf /var/lib/apt/lists/*
+    apt-get update; \
+    apt-get install -y --quiet --no-install-recommends \
+        unzip \
+    ; \
+    rm -rf /var/lib/apt/lists/*
 
 # install PHP extensions
 RUN set -ex; \
@@ -42,12 +42,12 @@ RUN set -ex; \
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
-		| sort -u \
-		| xargs -r dpkg-query -S \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -rt apt-mark manual; \
+        | awk '/=>/ { print $3 }' \
+        | sort -u \
+        | xargs -r dpkg-query -S \
+        | cut -d: -f1 \
+        | sort -u \
+        | xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*
