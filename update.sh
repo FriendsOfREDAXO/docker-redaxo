@@ -46,6 +46,9 @@ declare -A cmds=(
 declare -A bases=(
     [apache]='debian'
 )
+declare -A variantExtras=(
+	[apache]="$(< templates/apache-extras)"
+)
 
 # -----------------------------------------------------------------------------
 
@@ -62,6 +65,11 @@ getVersionTree () {
         done
         echo $versionTree
     fi
+}
+
+# escape special chars to use with sed
+sed_escape_rhs() {
+	gsed -e 's/[\/&]/\\&/g; $!a\'$'\n''\\n' <<<"$*" | tr -d '\n'
 }
 
 # bring out debug infos
@@ -82,6 +90,9 @@ for phpVersion in "${phpVersions[@]}"; do
         # declare cmd and base for current version
         cmd="${cmds[$variant]}"
         base="${bases[$variant]}"
+
+        # declare extras for current variant
+		extras="${variantExtras[$variant]:-}"
 
         # declare tags for current version and variant
         tags=()
@@ -107,8 +118,25 @@ for phpVersion in "${phpVersions[@]}"; do
             -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
             -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
             -e 's!%%VARIANT%%!'"$variant"'!g' \
+            -e 's!%%VARIANT_EXTRAS%%!'"$(sed_escape_rhs "$extras")"'!g' \
             -e 's!%%CMD%%!'"$cmd"'!g' \
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"
+
+        # update PHP version specific features in generated Dockerfile
+		case "$phpVersion" in
+			7.2 )
+				gsed -ri \
+					-e '/libzip-dev/d' \
+					"$dir/Dockerfile"
+				;;
+		esac
+		case "$phpVersion" in
+			7.2 | 7.3 )
+				gsed -ri \
+					-e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
+					"$dir/Dockerfile"
+				;;
+		esac
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
