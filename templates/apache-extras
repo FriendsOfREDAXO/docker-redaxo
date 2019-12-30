@@ -1,0 +1,3 @@
+# enable apache modules
+RUN set -eux; \
+	a2enmod expires headers rewrite
