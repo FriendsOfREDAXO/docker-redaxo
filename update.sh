@@ -15,6 +15,13 @@ set -euo pipefail
 # with associative arrays (hash tables). Check your version with `bash --version`.
 
 
+# check requirements
+command -v gsed >/dev/null 2>&1 || {
+    echo >&2 "GNU sed is required. If you're on Mac OS, use 'brew install gnu-sed' to install.";
+    exit 1;
+}
+
+
 # configuration ---------------------------------------------------------------
 
 # define latest REDAXO release
@@ -95,7 +102,7 @@ for phpVersion in "${phpVersions[@]}"; do
         echo "  Tags: $tags"
 
         # generate Dockerfile from template, replace placeholders
-        sed -E \
+        gsed -r \
             -e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
             -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
             -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
@@ -105,7 +112,7 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
-        sed -E \
+        gsed -r \
             -e 's!%%TAGS%%!'"$tags"'!g' \
             "templates/post_push.sh" > "$dir/hooks/post_push"
 
