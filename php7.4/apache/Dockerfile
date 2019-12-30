@@ -66,7 +66,7 @@ ENV REDAXO_VERSION=5.8.1 REDAXO_SHA=4f5175cdb55226e4f3fd8a34688e4199c9731062
 RUN set -e; \
     curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/${REDAXO_VERSION}/redaxo_${REDAXO_VERSION}.zip; \
     echo "${REDAXO_SHA} *redaxo.zip" | shasum -c -a 256; \
-    unzip -oq redaxo.zip -d /usr/src/; \
+    unzip -oq redaxo.zip -d /usr/src/redaxo; \
     rm redaxo.zip; \
     chown -R www-data:www-data /usr/src/redaxo
 
