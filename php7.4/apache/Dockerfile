@@ -70,9 +70,6 @@ RUN set -e; \
     rm redaxo.zip; \
     chown -R www-data:www-data /usr/src/redaxo
 
-# copy REDAXO setup file
-COPY redaxo-setup.php /usr/src/redaxo
-
 # copy and run entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
