@@ -24,6 +24,7 @@ if (rex::isSetup()) {
 
     // connect to db (repeat if not ready yet)
     // remember the docker database container takes some time to init!
+    $config = rex_file::getConfig(rex_path::coreData('config.yml'));
     $dbConnected = false;
     for ($i = 1, $max = 15; $i <= $max; ++$i) {
         $check = rex_setup::checkDb($config, false);
