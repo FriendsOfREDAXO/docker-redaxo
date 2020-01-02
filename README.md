@@ -48,9 +48,9 @@ $ docker run \
     -e REDAXO_DB_NAME=exampledb \
     -e REDAXO_DB_USER=exampleuser \
     -e REDAXO_DB_PASSWORD=examplepass \
-    -e REDAXO_USER: admin \
-    -e REDAXO_PASSWORD: admin123 \    
-    friendsofredaxo:redaxo@5
+    -e REDAXO_USER=admin \
+    -e REDAXO_PASSWORD=admin123 \    
+    friendsofredaxo/redaxo:5
 ```
 
 ### With [`docker-compose`](https://docs.docker.com/compose/reference/overview/)
@@ -62,7 +62,7 @@ version: '3'
 services:
 
   redaxo:
-    image: friendsofredaxo:redaxo@5
+    image: friendsofredaxo/redaxo:5
     ports:
       - 20080:80
     environment:
