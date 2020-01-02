@@ -1,6 +1,10 @@
 #!/usr/bin/php
 <?php
 
+// get arguments from command line
+$options = getopt('', array('user::', 'password::'));
+
+// bootstrap REDAXO
 $REX = [];
 $REX['REDAXO'] = true;
 $REX['HTDOCS_PATH'] = './';
@@ -48,5 +52,25 @@ if (rex::isSetup()) {
     if ($err != '') {
         echo $err;
         exit(1);
+    }
+
+    // create admin user
+    // hint: once implemented, we'll use cli command 'user:create' instead!
+    if ($options['user'] && $options['password']) {
+        $user = rex_sql::factory();
+        $user->setTable(rex::getTablePrefix() . 'user');
+        $user->setValue('name', $options['user']);
+        $user->setValue('login', $options['user']);
+        $user->setValue('password', rex_backend_login::passwordHash($options['password']));
+        $user->setValue('admin', 1);
+        $user->addGlobalCreateFields('console');
+        $user->addGlobalUpdateFields('console');
+        $user->setValue('status', '1');
+        try {
+            $user->insert();
+            echo '✅ Admin user successfully created.', PHP_EOL;
+        } catch (rex_sql_exception $e) {
+            echo '✋ Could not create admin user!', PHP_EOL;
+        }
     }
 }
