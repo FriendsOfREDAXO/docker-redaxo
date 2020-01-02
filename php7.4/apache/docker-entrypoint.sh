@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # make sure web root is empty
-if [ ! -e "${PWD}" ]; then
-    echo >&2 "✋ WARNING: ${PWD} is not empty! Skip REDAXO setup."
+if [[ ! -e "${PWD}" ]]; then
+    echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
     exit 1
 fi
 
@@ -30,9 +30,13 @@ echo >&2 "✅ Database connection has been configured."
 # hint: we make use of a setup helper file as long as the setup process is not yet
 # available via console: https://github.com/redaxo/redaxo/issues/1114
 echo >&2 "👉 Prepare database..."
-php redaxo-setup.php --user="$REDAXO_USER" --password="$REDAXO_PASSWORD" \
-    && rm -f redaxo-setup.php
-echo >&2 "✅ Database has been successfully prepared."
+if php redaxo-setup.php --user="$REDAXO_USER" --password="$REDAXO_PASSWORD"; then
+    rm -f redaxo-setup.php
+    echo >&2 "✅ Database has been successfully prepared."
+else
+    echo >&2 "❌ Failed to prepare database."
+    exit 1
+fi
 
 # run setup check
 # checks PHP version, directory permissions and database connection
