@@ -19,12 +19,16 @@ mkdir -p redaxo/data/core/ && \
 echo >&2 "✅ Default configuration has been successfully copied."
 
 # set database connection
-php redaxo/bin/console -q db:set-connection \
+if php redaxo/bin/console -q db:set-connection \
     --host=$REDAXO_DB_HOST \
     --database=$REDAXO_DB_NAME \
     --login=$REDAXO_DB_USER \
-    --password=$REDAXO_DB_PASSWORD
-echo >&2 "✅ Database connection has been configured."
+    --password=$REDAXO_DB_PASSWORD; then
+    echo >&2 "✅ Database connection has been configured."
+else
+    echo >&2 "❌ Failed to configure database."
+    exit 1
+fi
 
 # run setup (and clean up afterwards)
 # hint: we make use of a setup helper file as long as the setup process is not yet
@@ -40,8 +44,12 @@ fi
 
 # run setup check
 # checks PHP version, directory permissions and database connection
-php redaxo/bin/console -q setup:check
-echo >&2 "✅ Setup check successful."
+if php redaxo/bin/console -q setup:check; then
+    echo >&2 "✅ Setup check successful."
+else
+    echo >&2 "❌ Setup check failed."
+    exit 1
+fi
 
 # update config to disable setup mode
 sed -ri \
