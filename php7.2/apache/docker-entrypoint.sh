@@ -10,12 +10,12 @@ fi
 echo >&2 "👉 Prepare REDAXO setup..."
 
 # copy REDAXO to web root
-cp -R /usr/src/redaxo/. ./
+cp -Rp /usr/src/redaxo/. ./
 echo >&2 "✅ REDAXO has been successfully copied to ${PWD}."
 
 # copy default config
 mkdir -p redaxo/data/core/ && \
-    cp -f redaxo/src/core/default.config.yml redaxo/data/core/config.yml
+    cp -fp redaxo/src/core/default.config.yml redaxo/data/core/config.yml
 echo >&2 "✅ Default configuration has been successfully copied."
 
 # set database connection
