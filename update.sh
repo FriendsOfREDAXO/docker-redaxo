@@ -146,9 +146,11 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # copy entrypoint file
         cp -a templates/docker-entrypoint.sh "$dir/docker-entrypoint.sh"
+        chmod +x "$dir/docker-entrypoint.sh"
 
         # copy REDAXO setup helper file
         cp -a templates/redaxo-setup.php "$dir/redaxo-setup.php"
+        chmod +x "$dir/redaxo-setup.php"
 
         # add variant to travis config variable
         travisEnv+='\n  - VARIANT='"$dir"
