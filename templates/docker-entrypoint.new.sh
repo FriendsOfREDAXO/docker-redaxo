@@ -7,7 +7,7 @@ if [[ ! -e "${PWD}" ]]; then
     exit 1
 fi
 
-echo >&2 "👉 Prepare REDAXO setup..."
+echo >&2 "👉 Start REDAXO setup..."
 
 # copy REDAXO to web root
 cp -Rp /usr/src/redaxo/. ./ && \
@@ -18,24 +18,15 @@ mkdir -p redaxo/data/core/ && \
     cp -fp redaxo/src/core/default.config.yml redaxo/data/core/config.yml && \
     echo >&2 "✅ Default configuration has been successfully copied."
 
-# set database connection
-if php redaxo/bin/console -q db:set-connection \
-    --host=$REDAXO_DB_HOST \
-    --database=$REDAXO_DB_NAME \
-    --login=$REDAXO_DB_USER \
-    --password=$REDAXO_DB_PASSWORD 2> /dev/null || false; then
-    echo >&2 "✅ Database connection has been configured."
-else
-    echo >&2 "❌ Failed to configure database."
-    exit 1
-fi
-
 # prepare database
-# run 'setup:check' for PHP version, directory permissions and database connection
 # remember the docker database container takes some time to init!
 echo >&2 "👉 Prepare database..."
 repeat=10
-while ! php redaxo/bin/console -q setup:check 2> /dev/null || false; do
+while ! php redaxo/bin/console -q --force db:set-connection \
+    --host=$REDAXO_DB_HOST \
+    --database=$REDAXO_DB_NAME \
+    --login=$REDAXO_DB_USER \
+    --password=$REDAXO_DB_PASSWORD 2> /dev/null || false; do
     if [[ repeat -eq 0 ]]; then
         echo >&2 "❌ Failed to connect database."
         exit 1
@@ -45,6 +36,15 @@ while ! php redaxo/bin/console -q setup:check 2> /dev/null || false; do
     echo >&2 "⏳ Wait for database connection... ($repeat)"
 done
 echo >&2 "✅ Database has been has been successfully connected."
+
+# run setup check
+# checks PHP version, directory permissions and database connection
+if php redaxo/bin/console -q setup:check 2> /dev/null || false; then
+    echo >&2 "✅ Setup check successful."
+else
+    echo >&2 "❌ Setup check failed."
+    exit 1
+fi
 
 # init db
 # TODO
