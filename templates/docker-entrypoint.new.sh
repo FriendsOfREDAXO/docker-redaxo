@@ -22,7 +22,7 @@ mkdir -p redaxo/data/core/ && \
 # remember the docker database container takes some time to init!
 echo >&2 "👉 Prepare database..."
 repeat=10
-while ! php redaxo/bin/console -q --force db:set-connection \
+while ! php redaxo/bin/console -q db:set-connection \
     --host=$REDAXO_DB_HOST \
     --database=$REDAXO_DB_NAME \
     --login=$REDAXO_DB_USER \
