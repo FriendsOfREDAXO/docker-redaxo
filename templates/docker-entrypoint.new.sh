@@ -37,37 +37,28 @@ while ! php redaxo/bin/console -q db:set-connection \
 done
 echo >&2 "✅ Database has been has been successfully connected."
 
-# run setup check
-# checks PHP version, directory permissions and database connection
-if php redaxo/bin/console -q setup:check 2> /dev/null || false; then
-    echo >&2 "✅ Setup check successful."
+# run REDAXO setup
+setupArgs=(
+    "--agree-license"
+    "--db-setup=normal"
+);
+[[ -n "$REDAXO_LANGUAGE" ]] && setupArgs+=("--lang=$REDAXO_LANGUAGE");
+[[ -n "$REDAXO_SERVER" ]] && setupArgs+=("--server=$REDAXO_SERVER");
+[[ -n "$REDAXO_SERVERNAME" ]] && setupArgs+=("--servername=$REDAXO_SERVERNAME");
+[[ -n "$REDAXO_ERROR_EMAIL" ]] && setupArgs+=("--error-email=$REDAXO_ERROR_EMAIL");
+[[ -n "$REDAXO_TIMEZONE" ]] && setupArgs+=("--timezone=$REDAXO_TIMEZONE");
+[[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=$REDAXO_ADMIN_USER");
+[[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=$REDAXO_ADMIN_PASSWORD");
+
+if php redaxo/bin/console setup:run -n ${setupArgs[@]}; then
+    echo >&2 "✅ REDAXO has been successfully installed."
 else
-    echo >&2 "❌ Setup check failed."
+    echo >&2 "❌ REDAXO setup failed."
     exit 1
 fi
 
-# init db
-# TODO
-
-# create admin user
-# set database connection
-if php redaxo/bin/console -q user:create \
-    --admin \
-    $REDAXO_USER \
-    $REDAXO_PASSWORD 2> /dev/null || false; then
-    echo >&2 "✅ Admin user successfully created."
-else
-    echo >&2 "✋ Could not create admin user!"
-fi
-
-# update config to disable setup mode
-# TODO: use `config:set` once implemented into REDAXO cli
-sed -ri \
-    -e 's!setup: true!setup: false!g' \
-    "redaxo/data/core/config.yml" && \
-    echo >&2 "✅ Finished configuration."
-
 # done!
+echo >&2 " "
 echo >&2 "🚀 REDAXO setup successful."
 echo >&2 " "
 
