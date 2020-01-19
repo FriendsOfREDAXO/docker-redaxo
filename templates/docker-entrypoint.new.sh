@@ -58,9 +58,9 @@ else
 fi
 
 # done!
-echo >&2 " "
+echo >&2
 echo >&2 "🚀 REDAXO setup successful."
-echo >&2 " "
+echo >&2
 
 # execute CMD
 exec "$@"

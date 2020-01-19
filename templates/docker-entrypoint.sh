@@ -58,8 +58,9 @@ sed -ri \
 echo >&2 "✅ Finished configuration."
 
 # done!
+echo >&2
 echo >&2 "🚀 REDAXO setup successful."
-echo >&2 " "
+echo >&2
 
 # execute CMD
 exec "$@"
