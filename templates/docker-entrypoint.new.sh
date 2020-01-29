@@ -38,8 +38,10 @@ done
 echo >&2 "✅ Database has been has been successfully connected."
 
 # run REDAXO setup
+# hint: get options via `php redaxo/bin/console setup:run --help`
 setupArgs=(
     "--agree-license"
+    "--db-createdb=no"
     "--db-setup=normal"
 );
 [[ -n "$REDAXO_LANGUAGE" ]] && setupArgs+=("--lang=$REDAXO_LANGUAGE");
@@ -47,6 +49,7 @@ setupArgs=(
 [[ -n "$REDAXO_SERVERNAME" ]] && setupArgs+=("--servername=$REDAXO_SERVERNAME");
 [[ -n "$REDAXO_ERROR_EMAIL" ]] && setupArgs+=("--error-email=$REDAXO_ERROR_EMAIL");
 [[ -n "$REDAXO_TIMEZONE" ]] && setupArgs+=("--timezone=$REDAXO_TIMEZONE");
+[[ -n "$REDAXO_DB_CHARSET" ]] && setupArgs+=("--db-charset=$REDAXO_DB_CHARSET");
 [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=$REDAXO_ADMIN_USER");
 [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=$REDAXO_ADMIN_PASSWORD");
 
