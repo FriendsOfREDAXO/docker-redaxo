@@ -2,6 +2,7 @@
 
 There’s no official Docker image for REDAXO yet, but this one represents the __»official« community image__. It is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
 
+
 ## Supported tags
 
 Tags follow this scheme: `REDAXO-PHP-Variant`.
@@ -19,37 +20,60 @@ Examples:
 
 A [complete list of tags](https://hub.docker.com/r/friendsofredaxo/redaxo/tags) is available at Docker Hub.
 
+
 ## Environment variables
 
-Database credentials:
+System settings:
 
-* `REDAXO_DB_HOST`
-* `REDAXO_DB_NAME`
-* `REDAXO_DB_USER`
-* `REDAXO_DB_PASSWORD`
+* **`REDAXO_SERVER`**
+* **`REDAXO_SERVERNAME`**
+* **`REDAXO_ERROR_EMAIL`**
+* **`REDAXO_LANG`**
+* **`REDAXO_TIMEZONE`**
+
+Database settings:
+
+* **`REDAXO_DB_HOST`**
+* **`REDAXO_DB_NAME`**
+* **`REDAXO_DB_LOGIN`**
+* **`REDAXO_DB_PASSWORD`**
+* **`REDAXO_DB_CHARSET`**: `utf8mb4` charset is recommended for full emoji support 🙋 but requires at least MySQL 5.7.7 or MariaDB 10.2! Use `utf8` with older database systems :-(
 
 Admin user to be created:
 
-* `REDAXO_USER`
-* `REDAXO_PASSWORD`
+* **`REDAXO_ADMIN_USER`**
+* **`REDAXO_ADMIN_PASSWORD`**: must comply with the password policy (requires at least 8 chars)
+
+(See examples for `docker run` and `docker-compose` below)
+
 
 ## Usage
+
+Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 7.3 as our current default version.
 
 ### With [`docker run`](https://docs.docker.com/engine/reference/run/)
 
 Remember that REDAXO requires a [MySQL](https://hub.docker.com/_/mysql) or [MariaDB](https://hub.docker.com/_/mariadb) database. Could be either an external server or another Docker container.
+
+_Hint: We recommend to use at least MySQL 5.7.7 or MariaDB 10.2 for full emoji support via utf8mb4 charset!_
 
 ```bash
 $ docker run \
     --name my-redaxo-project \
     -d \
     -p 20080:80 \
-    -e REDAXO_DB_HOST=db \
-    -e REDAXO_DB_NAME=exampledb \
-    -e REDAXO_DB_USER=exampleuser \
-    -e REDAXO_DB_PASSWORD=examplepass \
-    -e REDAXO_USER=admin \
-    -e REDAXO_PASSWORD=admin123 \    
+    -e REDAXO_SERVER='http://localhost:20080' \
+    -e REDAXO_SERVERNAME='My Website' \
+    -e REDAXO_ERROR_EMAIL='john@doe.example' \
+    -e REDAXO_LANG='en_gb' \
+    -e REDAXO_TIMEZONE='Europe/London' \
+    -e REDAXO_DB_HOST='db' \
+    -e REDAXO_DB_NAME='redaxo' \
+    -e REDAXO_DB_LOGIN='redaxo' \
+    -e REDAXO_DB_PASSWORD='s3cretpasswOrd!' \
+    -e REDAXO_DB_CHARSET='utf8mb4' \
+    -e REDAXO_ADMIN_USER='admin' \
+    -e REDAXO_ADMIN_PASSWORD='PunKisNOT!dead' \
     friendsofredaxo/redaxo:5
 ```
 
@@ -65,30 +89,37 @@ services:
     image: friendsofredaxo/redaxo:5
     ports:
       - 20080:80
-    environment:
-      REDAXO_DB_HOST: db
-      REDAXO_DB_NAME: exampledb
-      REDAXO_DB_USER: exampleuser
-      REDAXO_DB_PASSWORD: examplepass
-      REDAXO_USER: admin
-      REDAXO_PASSWORD: admin123
     volumes:
       - redaxo:/var/www/html
+    environment:
+      REDAXO_SERVER: http://localhost:20080
+      REDAXO_SERVERNAME: 'My Website'
+      REDAXO_ERROR_EMAIL: john@doe.example
+      REDAXO_LANG: en_gb
+      REDAXO_TIMEZONE: Europe/London
+      REDAXO_DB_HOST: db
+      REDAXO_DB_NAME: redaxo
+      REDAXO_DB_LOGIN: redaxo
+      REDAXO_DB_PASSWORD: 's3cretpasswOrd!'
+      REDAXO_DB_CHARSET: utf8mb4
+      REDAXO_ADMIN_USER: admin
+      REDAXO_ADMIN_PASSWORD: 'PunKisNOT!dead'
 
   db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    image: mysql:5
     volumes:
       - db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: redaxo
+      MYSQL_USER: redaxo
+      MYSQL_PASSWORD: 's3cretpasswOrd!'
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
 
 volumes:
   redaxo:
   db:
 ```
+
 
 ## Need help?
 
