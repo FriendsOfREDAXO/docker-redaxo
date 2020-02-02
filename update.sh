@@ -33,7 +33,7 @@ sha1=9d8252adeaf17725d317fc5aa5602529df3fc2e6
 
 # declare PHP versions
 phpVersions=( 7.4 7.3 7.2 )
-defaultPhpVersion='7.3'
+defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
 variants=( apache )

@@ -8,10 +8,10 @@ There’s no official Docker image for REDAXO yet, but this one represents the _
 Tags follow this scheme: `REDAXO-PHP-Variant`.
 
 * __REDAXO version__ can include major, feature or hotfix releases, such as: `5`, `5.8`, `5.8.1`.
-* __PHP versions__: `php7.2`, `php7.3` _(default)_, `php7.4`
+* __PHP versions__: `php7.2`, `php7.3`, `php7.4` _(default)_
 * __Variants__: `apache` _(default)_
 
-As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (7.3) and the default variant (Apache).
+As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (7.4) and the default variant (Apache).
 
 Examples:
 
@@ -49,7 +49,7 @@ Admin user to be created:
 
 ## Usage
 
-Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 7.3 as our current default version.
+Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 7.4 as our current default version.
 
 ### With [`docker run`](https://docs.docker.com/engine/reference/run/)
 
