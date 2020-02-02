@@ -60,7 +60,7 @@ RUN set -eux; \
 VOLUME /var/www/html
 
 # declare REDAXO version and checksum
-ENV REDAXO_VERSION=5.8.1 REDAXO_SHA=4f5175cdb55226e4f3fd8a34688e4199c9731062
+ENV REDAXO_VERSION=5.9.0 REDAXO_SHA=9d8252adeaf17725d317fc5aa5602529df3fc2e6
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
@@ -69,9 +69,6 @@ RUN set -e; \
     unzip -oq redaxo.zip -d /usr/src/redaxo; \
     rm redaxo.zip; \
     chown -R www-data:www-data /usr/src/redaxo
-
-# copy REDAXO setup file
-COPY redaxo-setup.php /usr/src/redaxo
 
 # copy and run entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/
