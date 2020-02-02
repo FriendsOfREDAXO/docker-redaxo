@@ -106,7 +106,7 @@ services:
       REDAXO_ADMIN_PASSWORD: 'PunKisNOT!dead'
 
   db:
-    image: mysql:5
+    image: mysql:8
     volumes:
       - db:/var/lib/mysql
     environment:
