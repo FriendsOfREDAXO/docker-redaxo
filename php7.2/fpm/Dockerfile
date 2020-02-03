@@ -40,9 +40,9 @@ RUN set -ex; \
     > /dev/null \
     ; \
     \
-	# install imagick
-	pecl install imagick-3.4.4; \
-	docker-php-ext-enable imagick; \
+    # install imagick
+    pecl install imagick-3.4.4; \
+    docker-php-ext-enable imagick; \
     \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
