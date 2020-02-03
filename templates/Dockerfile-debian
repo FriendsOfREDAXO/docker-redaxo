@@ -4,6 +4,7 @@ FROM php:%%PHP_VERSION%%-%%VARIANT%%
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --quiet --no-install-recommends \
+        ghostscript \
         unzip \
     ; \
     rm -rf /var/lib/apt/lists/*
@@ -21,8 +22,9 @@ RUN set -ex; \
     apt-get install -y --quiet --no-install-recommends \
         libfreetype6-dev \
         libjpeg-dev \
-        libpng-dev \
+        libmagickwand-dev \
         libmcrypt-dev \
+        libpng-dev \
         libzip-dev \
     ; \
     \
@@ -37,6 +39,10 @@ RUN set -ex; \
     # delete output (except errors)
     > /dev/null \
     ; \
+    \
+	# install imagick
+	pecl install imagick-3.4.4; \
+	docker-php-ext-enable imagick; \
     \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
