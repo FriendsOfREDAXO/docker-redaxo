@@ -30,6 +30,7 @@ RUN set -ex; \
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr; \
     docker-php-ext-install -j "$(nproc)" \
         gd \
+        opcache \
         pdo_mysql \
         zip \
     # delete output (except errors)
