@@ -4,6 +4,7 @@ FROM php:7.2-apache
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --quiet --no-install-recommends \
+        ghostscript \
         unzip \
     ; \
     rm -rf /var/lib/apt/lists/*
@@ -21,8 +22,9 @@ RUN set -ex; \
     apt-get install -y --quiet --no-install-recommends \
         libfreetype6-dev \
         libjpeg-dev \
-        libpng-dev \
+        libmagickwand-dev \
         libmcrypt-dev \
+        libpng-dev \
     ; \
     \
     # install and configure via docker-php-ext
@@ -30,12 +32,17 @@ RUN set -ex; \
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr; \
     docker-php-ext-install -j "$(nproc)" \
         gd \
+        intl \
         opcache \
         pdo_mysql \
         zip \
     # delete output (except errors)
     > /dev/null \
     ; \
+    \
+	# install imagick
+	pecl install imagick-3.4.4; \
+	docker-php-ext-enable imagick; \
     \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
