@@ -112,7 +112,8 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # bring out debug infos
         echo "- Image: PHP $phpVersion $variant [base: $base] [cmd: $cmd]"
-        echo "  Tags: $tags"
+        echo "  Tags:"
+        printf "  - %s\n" ${tags}
 
         # generate Dockerfile from template, replace placeholders
         gsed -r \
