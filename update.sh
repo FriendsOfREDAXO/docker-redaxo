@@ -36,15 +36,17 @@ phpVersions=( 7.4 7.3 7.2 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
-variants=( apache )
+variants=( apache fpm )
 defaultVariant='apache'
 
 # declare commands and image bases for given variants
 declare -A cmds=(
     [apache]='apache2-foreground'
+    [fpm]='php-fpm'
 )
 declare -A bases=(
     [apache]='debian'
+    [fpm]='debian'
 )
 declare -A variantExtras=(
 	[apache]="$(< templates/apache-extras)"
@@ -81,7 +83,7 @@ for phpVersion in "${phpVersions[@]}"; do
     phpVersionDir="php$phpVersion"
 
     # loop through image variants
-    for variant in apache; do
+    for variant in "${variants[@]}"; do
 
         # declare and make directory for given PHP version and image variant
         dir="$phpVersionDir/$variant"
