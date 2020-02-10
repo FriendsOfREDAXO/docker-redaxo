@@ -36,17 +36,19 @@ phpVersions=( 7.4 7.3 7.2 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
-variants=( apache fpm )
+variants=( apache fpm fpm-alpine )
 defaultVariant='apache'
 
 # declare commands and image bases for given variants
 declare -A cmds=(
     [apache]='apache2-foreground'
     [fpm]='php-fpm'
+    [fpm-alpine]='php-fpm'
 )
 declare -A bases=(
     [apache]='debian'
     [fpm]='debian'
+    [fpm-alpine]='alpine'
 )
 declare -A variantExtras=(
 	[apache]="$(< templates/apache-extras)"
