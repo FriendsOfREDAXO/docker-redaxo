@@ -8,15 +8,17 @@ There’s no official Docker image for REDAXO yet, but this one represents the _
 Tags follow this scheme: `REDAXO-PHP-Variant`.
 
 * __REDAXO version__ can include major, feature or hotfix releases, such as: `5`, `5.9`, `5.9.0`.
-* __PHP versions__: `php7.2`, `php7.3`, `php7.4` _(default)_
-* __Variants__: `apache` _(default)_, `fpm`
+* __PHP versions__: `php7.4` _(default)_, `php7.3`, `php7.2`
+* __Variants__: `apache` _(default)_, `fpm`, `fpm-alpine`
 
 As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (7.4) and the default variant (Apache).
 
 Examples:
 
 * `5.9.0-php7.4-fpm`
+* `5.9.0-php7.4-fpm-alpine`
 * `5.9.0-php7.4-apache`
+* `5.9-php7.4-apache`
 * `5-php7.4-apache`
 * `5` 🔥
 
@@ -32,6 +34,8 @@ We provide two image variants:
   If you are unsure about what your needs are, you probably want to use this one.
 * `fpm`  
   This image doesn’t include a webserver and only starts a PHP FPM container. Use this image if you already have a **separate webserver** running, which is often NGINX.
+* `fpm-alpine`  
+  This image is based on [Alpine Linux](http://alpinelinux.org) and has a **very small footprint**. It doesn’t include a webserver and only starts a PHP FPM process. Use this image if you already have a separate webserver running and a small image size is very important.
 
 
 ## Environment variables
