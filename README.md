@@ -27,7 +27,7 @@ A [complete list of tags](https://hub.docker.com/r/friendsofredaxo/redaxo/tags) 
 
 ## Image variants
 
-We provide two image variants:
+We provide 3 image variants:
 
 * `apache` _(default)_  
   This image comes with an **Apache webserver included** and brings PHP with common extensions required to work with REDAXO out of the box. It is designed to be used both as a throw away container (mount your source code and start the container to start your app), as well as the base to build other images off of.  
