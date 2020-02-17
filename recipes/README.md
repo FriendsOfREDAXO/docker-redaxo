@@ -1,1 +1,3 @@
-# Recipes: REDAXO with Docker 🐳
+# Recipes: REDAXO with Docker
+
+🧁
