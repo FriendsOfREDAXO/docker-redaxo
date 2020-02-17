@@ -137,6 +137,10 @@ volumes:
   db:
 ```
 
+## Recipes
+
+🧁 See [recipes](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/master/recipes) section for further examples!
+
 
 ## Need help?
 
