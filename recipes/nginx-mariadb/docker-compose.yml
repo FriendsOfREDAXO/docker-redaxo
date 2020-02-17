@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  nginx:
+    image: nginx:stable
+    container_name: myproject_nginx
+    ports:
+      - 80:80   # web server will use port 80 for http
+    volumes:
+      - ./nginx:/etc/nginx/conf.d   # sync nginx config with local folder `nginx`
+      - ./html:/var/www/html:cached   # sync web root with local folder `html`
+    depends_on:
+      - redaxo   # requires redaxo container to be available
+
+  redaxo:
+    image: friendsofredaxo/redaxo:5-php7.4-fpm
+    container_name: myproject_redaxo
+    volumes:
+      - ./html:/var/www/html:cached   # sync web root with local folder `html`
+    depends_on:
+      - db   # requires database container to be available
+    environment:
+      REDAXO_SERVER: http://local.myproject
+      REDAXO_SERVERNAME: My Project
+      REDAXO_ERROR_EMAIL: mail@you.example
+      REDAXO_LANG: de_de
+      REDAXO_TIMEZONE: Europe/London
+      REDAXO_DB_HOST: db   # database container name
+      REDAXO_DB_NAME: redaxo
+      REDAXO_DB_LOGIN: redaxo
+      REDAXO_DB_PASSWORD: redaxo   # better not use for production!
+      REDAXO_DB_CHARSET: utf8mb4
+      REDAXO_ADMIN_USER: admin
+      REDAXO_ADMIN_PASSWORD: admin123   # better not use for production!
+
+  db:
+    image: mariadb:10
+    container_name: myproject_db
+    volumes:
+      - ./db:/var/lib/mysql:cached   # sync database with local folder `db`
+    environment:
+      MYSQL_DATABASE: redaxo
+      MYSQL_USER: redaxo
+      MYSQL_PASSWORD: redaxo   # better not use for production!
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'   # better not use for production!
