@@ -20,7 +20,7 @@ services:
     depends_on:
       - db   # requires database container to be available
     environment:
-      REDAXO_SERVER: http://local.myproject
+      REDAXO_SERVER: http://localhost
       REDAXO_SERVERNAME: My Project
       REDAXO_ERROR_EMAIL: mail@you.example
       REDAXO_LANG: de_de
