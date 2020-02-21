@@ -6,7 +6,11 @@ if [ "$(ls -A $PWD)" ]; then
     echo >&2 " "
     echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
     echo >&2 " "
-    exit 1
+    
+    # execute CMD
+    exec "$@"
+    
+    exit 0
 fi
 
 echo >&2 "👉 Start REDAXO setup..."
