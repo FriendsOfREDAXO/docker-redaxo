@@ -1,8 +1,20 @@
 #!/bin/bash
 set -euo pipefail
 
+
+# Checks whether a directory contains any nonhidden files.
+# usage: `if isempty "$HOME"; then echo "Welcome home"; fi`
+isempty() {
+    for _ief in $1/*; do
+        if [ -e "$_ief" ]; then
+            return 1
+        fi
+    done
+    return 0
+}
+
 # make sure web root is empty
-if [[ ! -e "${PWD}" ]]; then
+if isempty "${PWD}"; then
     echo >&2 " "
     echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
     echo >&2 " "
