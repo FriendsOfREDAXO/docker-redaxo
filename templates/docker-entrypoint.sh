@@ -1,8 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# make sure web root is empty
-if [[ "$(ls -A $PWD)" ]]; then
+if [[ -n "$(ls -A)" ]]; then
     echo >&2 " "
     echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
     echo >&2 " "
