@@ -1,3 +1,4 @@
-# Recipes: REDAXO with Docker
+# 🧁 Recipes: REDAXO with Docker
 
-<p style="font-size: 128px">🧁</p>
+- [REDAXO + Apache + MySQL](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/master/recipes/apache-mysql)
+- [REDAXO (FPM) + NGINX + MariaDB](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/master/recipes/nginx-mariadb)

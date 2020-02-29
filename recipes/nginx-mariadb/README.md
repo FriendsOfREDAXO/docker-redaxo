@@ -1,4 +1,4 @@
-# REDAXO FPM image with NGINX and MariaDb
+# REDAXO (FPM) + NGINX + MariaDB
 
 1. Place `docker-compose.yml` in your project root.
 2. Place `nginx.conf` in a sub folder `nginx/`.
