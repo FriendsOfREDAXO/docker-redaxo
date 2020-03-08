@@ -127,18 +127,18 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # update PHP version specific features in generated Dockerfile
         case "$phpVersion" in
-        7.2 )
-            gsed -ri \
-                -e '/libzip-dev/d' \
-                "$dir/Dockerfile"
-            ;;
+            7.2 )
+                gsed -ri \
+                    -e '/libzip-dev/d' \
+                    "$dir/Dockerfile"
+                ;;
         esac
         case "$phpVersion" in
-        7.2 | 7.3 )
-            gsed -ri \
-                -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
-                "$dir/Dockerfile"
-            ;;
+            7.2 | 7.3 )
+                gsed -ri \
+                    -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
+                    "$dir/Dockerfile"
+                ;;
         esac
 
         # copy hook from template, replace placeholders
