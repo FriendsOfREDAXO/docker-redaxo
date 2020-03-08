@@ -96,7 +96,7 @@ for phpVersion in "${phpVersions[@]}"; do
         base="${bases[$variant]}"
 
         # declare extras for current variant
-		extras="${variantExtras[$variant]:-}"
+        extras="${variantExtras[$variant]:-}"
 
         # declare tags for current version and variant
         tags=()
@@ -128,20 +128,20 @@ for phpVersion in "${phpVersions[@]}"; do
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"
 
         # update PHP version specific features in generated Dockerfile
-		case "$phpVersion" in
-			7.2 )
-				gsed -ri \
-					-e '/libzip-dev/d' \
-					"$dir/Dockerfile"
-				;;
-		esac
-		case "$phpVersion" in
-			7.2 | 7.3 )
-				gsed -ri \
-					-e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
-					"$dir/Dockerfile"
-				;;
-		esac
+        case "$phpVersion" in
+        7.2 )
+            gsed -ri \
+                -e '/libzip-dev/d' \
+                "$dir/Dockerfile"
+            ;;
+        esac
+        case "$phpVersion" in
+        7.2 | 7.3 )
+            gsed -ri \
+                -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
+                "$dir/Dockerfile"
+            ;;
+        esac
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
