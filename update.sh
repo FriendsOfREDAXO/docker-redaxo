@@ -4,8 +4,7 @@ set -euo pipefail
 
 # What is this update.sh?
 # It's a helper script you run whenever you've updated the REDAXO version or modified the Docker setup.
-# It generates all the Dockerfiles from templates, the post_push hooks containing image tags, and
-# in updates the travis config.
+# It generates all the Dockerfiles from templates and the post_push hooks containing image tags.
 # Once you commit and push the changes, Docker Hub will trigger automated builds of new images.
 
 # Usage:
@@ -79,7 +78,6 @@ sed_escape_rhs() {
 # bring out debug infos
 echo "REDAXO $latest"
 
-travisEnv=
 # loop through given PHP versions
 for phpVersion in "${phpVersions[@]}"; do
     phpVersionDir="php$phpVersion"
@@ -153,11 +151,5 @@ for phpVersion in "${phpVersions[@]}"; do
         cp -a templates/docker-entrypoint.sh "$dir/docker-entrypoint.sh"
         chmod +x "$dir/docker-entrypoint.sh"
 
-        # add variant to travis config variable
-        travisEnv+='\n  - VARIANT='"$dir"
     done
 done
-
-# TODO: update travis config file
-#travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
-#echo "$travis" > .travis.yml
