@@ -19,7 +19,7 @@ set -e
 # X
 
 
-for tag in 5.9.0-php7.2-fpm 5.9-php7.2-fpm 5-php7.2-fpm; do
+for tag in 5.9.0-php7.2-fpm; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag

@@ -71,6 +71,6 @@ else
     echo >&2 " "
 
 fi
-
+%%ENTRYPOINT_EXTRAS%%
 # execute CMD
 exec "$@"

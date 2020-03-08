@@ -36,22 +36,35 @@ phpVersions=( 7.4 7.3 7.2 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
-variants=( apache fpm fpm-alpine )
+variants=( apache fpm fpm-alpine demo)
 defaultVariant='apache'
 
 # declare commands and image bases for given variants
+declare -A variantbases=(
+    [apache]='apache'
+    [fpm]='fpm'
+    [fpm-alpine]='fpm-alpine'
+    [demo]='apache'
+)
+
 declare -A cmds=(
     [apache]='apache2-foreground'
     [fpm]='php-fpm'
     [fpm-alpine]='php-fpm'
+    [demo]='apache2-foreground'
 )
 declare -A bases=(
     [apache]='debian'
     [fpm]='debian'
     [fpm-alpine]='alpine'
+    [demo]='debian'
 )
 declare -A variantExtras=(
 	[apache]="$(< templates/apache-extras)"
+	[demo]="$(< templates/apache-extras)"
+)
+declare -A entrypointExtras=(
+  [demo]="$(< templates/demo-entrypoint-extras)"
 )
 
 # -----------------------------------------------------------------------------
@@ -94,7 +107,7 @@ for phpVersion in "${phpVersions[@]}"; do
         # declare cmd and base for current version
         cmd="${cmds[$variant]}"
         base="${bases[$variant]}"
-
+		    variantbase="${variantbases[$variant]:-}"
         # declare extras for current variant
 		extras="${variantExtras[$variant]:-}"
 
@@ -122,7 +135,7 @@ for phpVersion in "${phpVersions[@]}"; do
             -e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
             -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
             -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
-            -e 's!%%VARIANT%%!'"$variant"'!g' \
+            -e 's!%%VARIANT%%!'"$variantbase"'!g' \
             -e 's!%%VARIANT_EXTRAS%%!'"$(sed_escape_rhs "$extras")"'!g' \
             -e 's!%%CMD%%!'"$cmd"'!g' \
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"
@@ -150,7 +163,11 @@ for phpVersion in "${phpVersions[@]}"; do
             "templates/post_push.sh" > "$dir/hooks/post_push"
 
         # copy entrypoint file
-        cp -a templates/docker-entrypoint.sh "$dir/docker-entrypoint.sh"
+        entrypointExtra="${entrypointExtras[$variant]:-}"
+        gsed -r \
+            -e 's!%%ENTRYPOINT_EXTRAS%%!'"$(sed_escape_rhs "$entrypointExtra")"'!g' \
+            "templates/docker-entrypoint.sh" > "$dir/docker-entrypoint.sh"
+
         chmod +x "$dir/docker-entrypoint.sh"
 
         # add variant to travis config variable

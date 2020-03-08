@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:7.2-apache
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
@@ -25,12 +25,11 @@ RUN set -ex; \
         libmagickwand-dev \
         libmcrypt-dev \
         libpng-dev \
-        libzip-dev \
     ; \
     \
     # install and configure via docker-php-ext
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
-    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr; \
     docker-php-ext-install -j "$(nproc)" \
         gd \
         intl \
