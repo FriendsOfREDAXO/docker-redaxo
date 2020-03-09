@@ -1,0 +1,71 @@
+version: "3"
+services:
+
+  redaxo:
+    image: friendsofredaxo/redaxo:5
+    container_name: myproject_redaxo
+    ports:
+      - 80:80   # web server will use port 80 for http
+    links:
+      - fluentd
+    volumes:
+      - ./html:/var/www/html:cached   # sync web root with local folder `html`
+    depends_on:
+      - db   # requires database container to be available
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: httpd.access
+    environment:
+      REDAXO_SERVER: http://localhost
+      REDAXO_SERVERNAME: My Project
+      REDAXO_ERROR_EMAIL: mail@you.example
+      REDAXO_LANG: de_de
+      REDAXO_TIMEZONE: Europe/London
+      REDAXO_DB_HOST: db   # database container name
+      REDAXO_DB_NAME: redaxo
+      REDAXO_DB_LOGIN: redaxo
+      REDAXO_DB_PASSWORD: redaxo   # better not use for production!
+      REDAXO_DB_CHARSET: utf8mb4
+      REDAXO_ADMIN_USER: admin
+      REDAXO_ADMIN_PASSWORD: admin123   # better not use for production!
+
+  fluentd:
+      build: ./fluentd
+      volumes:
+        - ./fluentd/conf:/fluentd/etc
+      links:
+        - "elasticsearch"
+      ports:
+        - "24224:24224"
+        - "24224:24224/udp"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    environment:
+      - "discovery.type=single-node"
+    expose:
+      - "9200"
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: kibana:7.2.0
+    links:
+      - "elasticsearch"
+    ports:
+      - "5601:5601"
+
+  db:
+    image: mysql:8
+    container_name: myproject_db
+    ports:       
+      - 3306:3306 # add mysql server connection
+    volumes:
+      - ./db:/var/lib/mysql:cached   # sync database with local folder `db`
+    environment:
+      MYSQL_DATABASE: redaxo
+      MYSQL_USER: redaxo
+      MYSQL_PASSWORD: redaxo   # better not use for production!
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'   # better not use for production!
