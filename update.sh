@@ -60,7 +60,7 @@ declare -A variantExtras=(
 getVersionTree () {
     # check for version format X, X.X or X.X.X
     # we skip any beta or other versions!
-    if [[ $1 =~ ^(0|[1-9]\d*)(\.(0|[1-9]\d*))?(\.(0|[1-9]\d*))?$ ]]; then
+    if [[ $1 =~ ^(0|[1-9][0-9]*)(\\.(0|[1-9][0-9]*))?(\\.(0|[1-9][0-9]*))?$ ]]; then
         version=$1
         for (( i=1; i<=3; i++ )); do
             versionTree+=($version)
