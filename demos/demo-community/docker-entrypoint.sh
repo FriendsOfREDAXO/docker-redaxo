@@ -88,7 +88,6 @@ ls -la redaxo/src/addons/demo_community
 php redaxo/bin/console package:install demo_community
 php redaxo/bin/console -q demo_community:install -y
 
-# fix for r5.10
 php redaxo/bin/console package:install -r structure/content
 
 chown -R www-data:www-data ./

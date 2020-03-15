@@ -82,20 +82,25 @@ VOLUME /var/www/html
 ENV REDAXO_VERSION=5.10.0 REDAXO_SHA=3027c9745d4bb62db51733995b901cdd6e4406a6
 
 # fetch REDAXO, validate checksum and extract to tmp folder
-#RUN set -e; \
-#    curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/${REDAXO_VERSION}/redaxo_${REDAXO_VERSION}.zip; \
-#    echo "${REDAXO_SHA} *redaxo.zip" | shasum -c -a 256; \
-#    unzip -oq redaxo.zip -d /usr/src/redaxo; \
-#    rm redaxo.zip; \
-#    chown -R www-data:www-data /usr/src/redaxo
+RUN set -e; \
+    curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/${REDAXO_VERSION}/redaxo_${REDAXO_VERSION}.zip; \
+    echo "${REDAXO_SHA} *redaxo.zip" | shasum -c -a 256; \
+    unzip -oq redaxo.zip -d /usr/src/redaxo; \
+    rm redaxo.zip; \
+    chown -R www-data:www-data /usr/src/redaxo
 
 #   # fetch REDAXO, validate checksum and extract to tmp folder
-RUN set -e; \
-   curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/archive/master.zip; \
-   unzip -oq redaxo.zip -d /usr/src; \
-   mv /usr/src/redaxo-master /usr/src/redaxo; \
-   rm redaxo.zip; \
-   chown -R www-data:www-data /usr/src/redaxo
+#   RUN set -e; \
+#   #    curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/${REDAXO_VERSION}/redaxo_${REDAXO_VERSION}.zip; \
+#   #    curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/archive/master.zip; \
+#       curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/archive/rex-command-package-sync.zip; \
+#   #    echo "${REDAXO_SHA} *redaxo.zip" | shasum -c -a 256; \
+#       unzip -oq redaxo.zip -d /usr/src; \
+#   #    mv /usr/src/redaxo-master /usr/src/redaxo; \
+#       mv /usr/src/redaxo-rex-command-package-sync /usr/src/redaxo; \
+#       cp -r /usr/src/redaxo/redaxo/src/core/assets /usr/src/redaxo/assets/core; \
+#   rm redaxo.zip; \
+#       chown -R www-data:www-data /usr/src/redaxo
 
 
 
