@@ -4,8 +4,7 @@ set -euo pipefail
 
 # What is this update.sh?
 # It's a helper script you run whenever you've updated the REDAXO version or modified the Docker setup.
-# It generates all the Dockerfiles from templates, the post_push hooks containing image tags, and
-# in updates the travis config.
+# It generates all the Dockerfiles from templates and the post_push hooks containing image tags.
 # Once you commit and push the changes, Docker Hub will trigger automated builds of new images.
 
 # Usage:
@@ -28,8 +27,8 @@ command -v gsed >/dev/null 2>&1 || {
 # hint: we could curl the latest release from github instead but wouldn't receive the sha1 checksum.
 # That's why we write it down here after we generate it like this:
 # `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.8.1/redaxo_5.8.1.zip | shasum`
-latest=5.9.0
-sha1=9d8252adeaf17725d317fc5aa5602529df3fc2e6
+latest=5.10.0
+sha1=3027c9745d4bb62db51733995b901cdd6e4406a6
 
 # declare PHP versions
 phpVersions=( 7.4 7.3 7.2 )
@@ -74,7 +73,7 @@ declare -A entrypointExtras=(
 getVersionTree () {
     # check for version format X, X.X or X.X.X
     # we skip any beta or other versions!
-    if [[ $1 =~ ^(0|[1-9]\d*)(\.(0|[1-9]\d*))?(\.(0|[1-9]\d*))?$ ]]; then
+    if [[ $1 =~ ^(0|[1-9][0-9]*)(\\.(0|[1-9][0-9]*))?(\\.(0|[1-9][0-9]*))?$ ]]; then
         version=$1
         for (( i=1; i<=3; i++ )); do
             versionTree+=($version)
@@ -92,7 +91,6 @@ sed_escape_rhs() {
 # bring out debug infos
 echo "REDAXO $latest"
 
-travisEnv=
 # loop through given PHP versions
 for phpVersion in "${phpVersions[@]}"; do
     phpVersionDir="php$phpVersion"
@@ -109,7 +107,7 @@ for phpVersion in "${phpVersions[@]}"; do
         base="${bases[$variant]}"
 		    variantbase="${variantbases[$variant]:-}"
         # declare extras for current variant
-		extras="${variantExtras[$variant]:-}"
+        extras="${variantExtras[$variant]:-}"
 
         # declare tags for current version and variant
         tags=()
@@ -141,20 +139,20 @@ for phpVersion in "${phpVersions[@]}"; do
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"
 
         # update PHP version specific features in generated Dockerfile
-		case "$phpVersion" in
-			7.2 )
-				gsed -ri \
-					-e '/libzip-dev/d' \
-					"$dir/Dockerfile"
-				;;
-		esac
-		case "$phpVersion" in
-			7.2 | 7.3 )
-				gsed -ri \
-					-e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
-					"$dir/Dockerfile"
-				;;
-		esac
+        case "$phpVersion" in
+            7.2 )
+                gsed -ri \
+                    -e '/libzip-dev/d' \
+                    "$dir/Dockerfile"
+                ;;
+        esac
+        case "$phpVersion" in
+            7.2 | 7.3 )
+                gsed -ri \
+                    -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
+                    "$dir/Dockerfile"
+                ;;
+        esac
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
@@ -170,11 +168,5 @@ for phpVersion in "${phpVersions[@]}"; do
 
         chmod +x "$dir/docker-entrypoint.sh"
 
-        # add variant to travis config variable
-        travisEnv+='\n  - VARIANT='"$dir"
     done
 done
-
-# TODO: update travis config file
-#travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
-#echo "$travis" > .travis.yml
