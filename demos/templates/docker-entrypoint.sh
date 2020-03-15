@@ -72,5 +72,27 @@ else
 
 fi
 
+echo >&2 "👉 Start REDAXO DEMO setup..."
+
+#    curl -Ls -o demo.zip https://github.com/FriendsOfREDAXO/demo_community/archive/3.0.0.zip; \
+curl -Ls -o demo.zip https://github.com/FriendsOfREDAXO/demo_community/archive/command.zip; \
+unzip -oq demo.zip -d /tmp/demo_community; \
+#    mv /tmp/demo_community/demo_community-3.0.0 ./redaxo/src/addons/demo_community; \
+mv /tmp/demo_community/demo_community-command ./redaxo/src/addons/demo_community; \
+rm demo.zip; \
+
+chown -R www-data:www-data ./
+
+ls -la redaxo/src/addons/demo_community
+
+php redaxo/bin/console package:install demo_community
+php redaxo/bin/console -q demo_community:install -y
+
+php redaxo/bin/console package:install -r structure/content
+
+chown -R www-data:www-data ./
+
+echo >&2 "✅ REDAXO DEMO has been successfully installed."
+
 # execute CMD
 exec "$@"
