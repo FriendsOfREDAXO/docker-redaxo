@@ -70,6 +70,23 @@ else
     echo >&2 "🚀 REDAXO setup successful."
     echo >&2 " "
 
+    # run custom setup (if available)
+    # hint: enables child images to extend the setup process
+    CUSTOM_SETUP="/usr/local/bin/custom-setup.sh";
+    if [[ -x "$CUSTOM_SETUP" ]]; then
+      echo >&2 "👉 Run custom setup..."
+
+      if "$CUSTOM_SETUP"; then
+        echo >&2 " "
+        echo >&2 "🚀 Custom setup successful."
+        echo >&2 " "
+      else
+          echo >&2 " "
+          echo >&2 "❌ Custom setup failed."
+          echo >&2 " "
+          exit 1
+      fi
+    fi
 fi
 
 # execute CMD
