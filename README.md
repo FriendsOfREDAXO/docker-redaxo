@@ -1,8 +1,10 @@
 # Docker community image for REDAXO
 
-There’s no official Docker image for REDAXO yet, but this one represents the __»official« community image__. It is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
+There’s no official Docker image for [REDAXO](https://github.com/redaxo/redaxo/) yet, but this one represents the __»official« community image__. It is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
 
 ![Screenshot](https://raw.githubusercontent.com/redaxo/redaxo/assets/redaxo_02.png)
+
+💁 Please note that REDAXO is completely raw after installation. If you’re new to REDAXO and would like to get to know the system, better check out one of the [demo website images](https://hub.docker.com/r/friendsofredaxo/demo)!
 
 
 ## Supported tags
