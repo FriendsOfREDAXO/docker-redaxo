@@ -36,8 +36,9 @@ RUN set -ex; \
     ; \
     \
     # install imagick
-    pecl install imagick-3.4.4; \
-    docker-php-ext-enable imagick; \
+    mkdir -p /usr/src/php/ext/imagick; \
+    curl -fsSL https://pecl.php.net/get/imagick | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
+    docker-php-ext-install imagick; \
     \
     runDeps="$( \
         scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
