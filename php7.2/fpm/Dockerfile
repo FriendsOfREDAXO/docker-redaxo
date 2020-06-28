@@ -33,7 +33,6 @@ RUN set -ex; \
     docker-php-ext-install -j "$(nproc)" \
         gd \
         intl \
-        opcache \
         pdo_mysql \
         zip \
     # delete output (except errors)
@@ -62,7 +61,9 @@ RUN set -ex; \
 
 # enable OPcache
 # see https://secure.php.net/manual/en/opcache.installation.php
-RUN { \
+RUN set -eux; \
+    docker-php-ext-enable opcache; \
+    { \
         echo 'opcache.memory_consumption=128'; \
         echo 'opcache.interned_strings_buffer=8'; \
         echo 'opcache.max_accelerated_files=4000'; \
