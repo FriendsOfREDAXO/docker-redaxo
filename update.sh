@@ -27,8 +27,8 @@ command -v gsed >/dev/null 2>&1 || {
 # hint: we could curl the latest release from github instead but wouldn't receive the sha1 checksum.
 # That's why we write it down here after we generate it like this:
 # `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.8.1/redaxo_5.8.1.zip | shasum`
-latest=5.10.1
-sha1=986c905aec77dfd67b0dbca17aa57505889329b3
+latest=5.11.0
+sha1=66da3403fb8bb5eef86931fe4f959e1a4f3a26da
 
 # declare PHP versions
 phpVersions=( 7.4 7.3 7.2 )
