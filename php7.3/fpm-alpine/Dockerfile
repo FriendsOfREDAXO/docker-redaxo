@@ -3,7 +3,6 @@ FROM php:7.3-fpm-alpine
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN apk add --no-cache \
     bash \
-    ghostscript \
     # add perl-utils to include shasum
     perl-utils \
     sed \
@@ -17,7 +16,6 @@ RUN set -ex; \
         freetype-dev \
         # add icu-dev to be able to install intl extension
         icu-dev \
-        imagemagick-dev \
         libjpeg-turbo-dev \
         libpng-dev \
         libzip-dev \
@@ -34,11 +32,6 @@ RUN set -ex; \
     # delete output (except errors)
     > /dev/null \
     ; \
-    \
-    # install imagick
-    mkdir -p /usr/src/php/ext/imagick; \
-    curl -fsSL https://pecl.php.net/get/imagick | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
-    docker-php-ext-install imagick; \
     \
     runDeps="$( \
         scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
