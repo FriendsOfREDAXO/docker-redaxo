@@ -65,6 +65,9 @@ else
         exit 1
     fi
 
+    # update file owner and group of writable folders (cache, data)
+    chown -R www-data:www-data redaxo/cache redaxo/data;
+
     # done!
     echo >&2 " "
     echo >&2 "🚀 REDAXO setup successful."
