@@ -40,8 +40,9 @@ RUN set -ex; \
     ; \
     \
     # install imagick
+    # use github version for now until release from https://pecl.php.net/get/imagick is ready for PHP 8
     mkdir -p /usr/src/php/ext/imagick; \
-    curl -fsSL https://pecl.php.net/get/imagick | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
+    curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.zip | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
     docker-php-ext-install imagick; \
     \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
