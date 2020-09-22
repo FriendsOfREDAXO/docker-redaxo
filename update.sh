@@ -140,15 +140,6 @@ for phpVersion in "${phpVersions[@]}"; do
                     "$dir/Dockerfile"
                 ;;
         esac
-        case "$phpVersion" in
-            8.0-rc )
-                # Remove Imagick from PHP 8 images for now due to installation issues
-                # Requires https://github.com/Imagick/imagick/issues/331 to be fixed
-                gsed -ri \
-                    -e '/# install imagick/,+4d' \
-                    "$dir/Dockerfile"
-                ;;
-        esac
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
