@@ -3,7 +3,6 @@ services:
 
   redaxo:
     image: friendsofredaxo/redaxo:5
-    container_name: myproject_redaxo
     ports:
       - 80:80   # web server will use port 80 for http
     volumes:
@@ -26,7 +25,6 @@ services:
 
   db:
     image: mysql:8
-    container_name: myproject_db
     volumes:
       - ./db:/var/lib/mysql:cached   # sync database with local folder `db`
     environment:
