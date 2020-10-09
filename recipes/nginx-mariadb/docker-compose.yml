@@ -3,7 +3,6 @@ services:
 
   nginx:
     image: nginx:stable
-    container_name: myproject_nginx
     ports:
       - 80:80   # web server will use port 80 for http
     volumes:
@@ -14,7 +13,6 @@ services:
 
   redaxo:
     image: friendsofredaxo/redaxo:5-php7.4-fpm
-    container_name: myproject_redaxo
     volumes:
       - ./html:/var/www/html:cached   # sync web root with local folder `html`
     depends_on:
@@ -35,7 +33,6 @@ services:
 
   db:
     image: mariadb:10
-    container_name: myproject_db
     volumes:
       - ./db:/var/lib/mysql:cached   # sync database with local folder `db`
     environment:
