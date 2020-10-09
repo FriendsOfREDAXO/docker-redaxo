@@ -2,7 +2,7 @@ version: "3"
 services:
 
   redaxo:
-    image: friendsofredaxo/redaxo:5
+    build: ./docker/redaxo   # build folder for redaxo image
     ports:
       - 80:80   # web server will use port 80 for http
     volumes:
