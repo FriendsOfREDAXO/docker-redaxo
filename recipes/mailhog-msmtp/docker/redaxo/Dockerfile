@@ -5,6 +5,10 @@ COPY php.ini /usr/local/etc/php/
 COPY msmtprc /etc/msmtprc
 COPY .mailrc ~/.mailrc
 
+# use noninteractive frontend to install extionsions
+# http://manpages.org/debconf/
+ENV DEBIAN_FRONTEND noninteractive
+
 # install extensions
 RUN apt-get update -q && apt-get install -qy \
        msmtp \
