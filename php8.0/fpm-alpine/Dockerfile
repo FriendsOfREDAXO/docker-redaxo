@@ -1,4 +1,4 @@
-FROM php:8.0-rc-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN apk add --no-cache \

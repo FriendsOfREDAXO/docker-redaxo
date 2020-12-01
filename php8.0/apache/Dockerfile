@@ -1,4 +1,4 @@
-FROM php:8.0-rc-fpm
+FROM php:8.0-apache
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
@@ -73,7 +73,9 @@ RUN set -eux; \
         echo 'opcache.fast_shutdown=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-
+# enable apache modules
+RUN set -eux; \
+    a2enmod expires headers rewrite
 
 # create mount point for web root
 VOLUME /var/www/html
@@ -94,4 +96,4 @@ COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 # run CMD
-CMD ["php-fpm"]
+CMD ["apache2-foreground"]
