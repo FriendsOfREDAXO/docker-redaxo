@@ -19,7 +19,7 @@ set -e
 # X
 
 
-for tag in 5.11.1-php7.3-apache 5.11-php7.3-apache 5-php7.3-apache; do
+for tag in 5.11.2-php7.3-apache 5.11-php7.3-apache 5-php7.3-apache; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag
