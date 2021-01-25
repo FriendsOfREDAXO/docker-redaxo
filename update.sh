@@ -14,13 +14,6 @@ set -euo pipefail
 # with associative arrays (hash tables). Check your version with `bash --version`.
 
 
-# check requirements
-command -v gsed >/dev/null 2>&1 || {
-    echo >&2 "GNU sed is required. If you're on Mac OS, use 'brew install gnu-sed' to install.";
-    exit 1;
-}
-
-
 # configuration ---------------------------------------------------------------
 
 # define latest REDAXO release
@@ -72,7 +65,7 @@ getVersionTree () {
 
 # escape special chars to use with sed
 sed_escape_rhs() {
-	gsed -e 's/[\/&]/\\&/g; $!a\'$'\n''\\n' <<<"$*" | tr -d '\n'
+	sed -e 's/[\/&]/\\&/g; $!a\'$'\n''\\n' <<<"$*" | tr -d '\n'
 }
 
 # bring out debug infos
@@ -116,7 +109,7 @@ for phpVersion in "${phpVersions[@]}"; do
         printf "  - %s\n" ${tags}
 
         # generate Dockerfile from template, replace placeholders
-        gsed -r \
+        sed -r \
             -e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
             -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
             -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
@@ -125,17 +118,26 @@ for phpVersion in "${phpVersions[@]}"; do
             -e 's!%%CMD%%!'"$cmd"'!g' \
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"
 
+        # Use placeholder for `sed -i` due to differences between GNU and BSD/Mac
+        # https://stackoverflow.com/a/51060063
+        # GNU
+        sedi=(-i)
+        case "$(uname)" in
+          # macOS
+          Darwin*) sedi=(-i "")
+        esac
+
         # update PHP version specific features in generated Dockerfile
         case "$phpVersion" in
             7.2 )
-                gsed -ri \
+                sed -r "${sedi[@]}" \
                     -e '/libzip-dev/d' \
                     "$dir/Dockerfile"
                 ;;
         esac
         case "$phpVersion" in
             7.2 | 7.3 )
-                gsed -ri \
+                sed -r "${sedi[@]}" \
                     -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
                     "$dir/Dockerfile"
                 ;;
@@ -143,7 +145,7 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # copy hook from template, replace placeholders
         mkdir -p "$dir/hooks"
-        gsed -r \
+        sed -r \
             -e 's!%%TAGS%%!'"$tags"'!g' \
             "templates/post_push.sh" > "$dir/hooks/post_push"
 
