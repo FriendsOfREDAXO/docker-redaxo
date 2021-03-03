@@ -20,8 +20,8 @@ set -euo pipefail
 # hint: we could curl the latest release from github instead but wouldn't receive the sha1 checksum.
 # That's why we write it down here after we generate it like this:
 # `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.8.1/redaxo_5.8.1.zip | shasum`
-latest=5.11.2
-sha1=44fca196316606b1a64ba34f873bfc886d3cbbb5
+latest=5.12.0
+sha1=375e659e6039f8ecd1df2d31186755897426c4b5
 
 # declare PHP versions
 phpVersions=( 8.0 7.4 7.3 )
