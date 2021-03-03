@@ -24,7 +24,7 @@ latest=5.11.2
 sha1=44fca196316606b1a64ba34f873bfc886d3cbbb5
 
 # declare PHP versions
-phpVersions=( 8.0 7.4 7.3 7.2 )
+phpVersions=( 8.0 7.4 7.3 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
@@ -129,14 +129,7 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # update PHP version specific features in generated Dockerfile
         case "$phpVersion" in
-            7.2 )
-                sed -r "${sedi[@]}" \
-                    -e '/libzip-dev/d' \
-                    "$dir/Dockerfile"
-                ;;
-        esac
-        case "$phpVersion" in
-            7.2 | 7.3 )
+            7.3 )
                 sed -r "${sedi[@]}" \
                     -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
                     "$dir/Dockerfile"
