@@ -5,9 +5,21 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --quiet --no-install-recommends \
         ghostscript \
+        locales \
         unzip \
     ; \
     rm -rf /var/lib/apt/lists/*
+
+# generate locales
+RUN set -eux; \
+    echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "en_GB.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "it_IT.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "nl_NL.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen; \
+    echo "sv_SE.UTF-8 UTF-8" >> /etc/locale.gen; \
+    locale-gen
 
 # install PHP extensions
 RUN set -ex; \
