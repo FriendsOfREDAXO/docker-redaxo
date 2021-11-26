@@ -26,6 +26,7 @@ RUN set -ex; \
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp-dir=/usr; \
     docker-php-ext-install -j "$(nproc)" \
+        exif \
         gd \
         intl \
         pdo_mysql \
