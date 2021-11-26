@@ -131,7 +131,7 @@ for phpVersion in "${phpVersions[@]}"; do
         case "$phpVersion" in
             7.3 )
                 sed -r "${sedi[@]}" \
-                    -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr!g' \
+                    -e 's!gd --with-freetype --with-jpeg!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp-dir=/usr!g' \
                     "$dir/Dockerfile"
                 ;;
         esac
