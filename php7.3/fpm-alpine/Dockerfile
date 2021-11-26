@@ -18,12 +18,13 @@ RUN set -ex; \
         icu-dev \
         libjpeg-turbo-dev \
         libpng-dev \
+        libwebp-dev \
         libzip-dev \
 	; \
     \
     # install and configure via docker-php-ext
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
-    docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr; \
+    docker-php-ext-configure gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp; \
     docker-php-ext-install -j "$(nproc)" \
         gd \
         intl \
