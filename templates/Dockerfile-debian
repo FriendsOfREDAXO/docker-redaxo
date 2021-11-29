@@ -107,11 +107,5 @@ RUN set -e; \
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-# prepare for www-data user and switch
-RUN set -ex; \
-    mkdir -p /var/www/html; \
-    chown -R www-data:www-data /var/www/html
-USER www-data
-
 # run CMD
 CMD ["%%CMD%%"]
