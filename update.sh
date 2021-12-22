@@ -24,7 +24,7 @@ latest=5.13.1
 sha1=94397abd2b7812735b1e69225bb12d85fac57c39
 
 # declare PHP versions
-phpVersions=( 8.1 8.0 7.4 7.3 )
+phpVersions=( 8.1 8.0 7.4 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
@@ -125,15 +125,6 @@ for phpVersion in "${phpVersions[@]}"; do
         case "$(uname)" in
           # macOS
           Darwin*) sedi=(-i "")
-        esac
-
-        # update PHP version specific features in generated Dockerfile
-        case "$phpVersion" in
-            7.3 )
-                sed -r "${sedi[@]}" \
-                    -e 's!gd --with-freetype --with-jpeg --with-webp!gd --with-freetype-dir=/usr --with-jpeg-dir=/usr --with-png-dir=/usr --with-webp-dir=/usr!g' \
-                    "$dir/Dockerfile"
-                ;;
         esac
 
         # copy hook from template, replace placeholders
