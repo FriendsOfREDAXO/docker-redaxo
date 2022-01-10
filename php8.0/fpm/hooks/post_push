@@ -19,7 +19,7 @@ set -e
 # X
 
 
-for tag in 5.13.1-php8.0-fpm 5.13-php8.0-fpm 5-php8.0-fpm; do
+for tag in 5.13.2-php8.0-fpm 5.13-php8.0-fpm 5-php8.0-fpm; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag
