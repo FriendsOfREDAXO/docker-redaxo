@@ -26,7 +26,7 @@ RUN set -ex; \
     \
     # mark packages as being manually installed
     # see https://manpages.debian.org/stretch/apt/apt-mark.8.en.html
-    savedAptMark="$(apt-mark showmanual)"; \
+    apt-mark showmanual > /root/apt_mark_manual; \
     \
     # install via apt-get
     # see https://manpages.debian.org/stretch/apt/apt-get.8.en.html
@@ -39,8 +39,11 @@ RUN set -ex; \
         libpng-dev \
         libwebp-dev \
         libzip-dev \
-    ; \
-    \
+    ;
+
+
+
+RUN set -ex; \
     # install and configure via docker-php-ext
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
@@ -63,7 +66,8 @@ RUN set -ex; \
     # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
     # see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
     apt-mark auto '.*' > /dev/null; \
-    apt-mark manual $savedAptMark; \
+    xargs apt-mark manual < /root/apt_mark_manual; \
+    rm /root/apt_mark_manual; \
     ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
         | awk '/=>/ { print $3 }' \
         | sort -u \
@@ -86,8 +90,6 @@ RUN set -eux; \
         echo 'opcache.revalidate_freq=2'; \
         echo 'opcache.fast_shutdown=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-
 
 # create mount point for web root
 VOLUME /var/www/html
