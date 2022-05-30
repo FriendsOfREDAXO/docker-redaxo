@@ -1,0 +1,12 @@
+# compile and enable xdebug module
+
+# install and enable Xdebug
+# https://pecl.php.net/package/xdebug
+RUN set -ex; \
+    pecl install xdebug-3.1.4 \
+    docker-php-ext-enable xdebug; \
+    { \
+        echo 'xdebug.mode = develop,debug'; \
+        echo 'xdebug.start_with_request = trigger'; \
+        echo 'xdebug.client_host = host.docker.internal'; \
+    } > /usr/local/etc/php/conf.d/xdebug.ini;

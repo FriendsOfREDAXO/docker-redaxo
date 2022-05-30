@@ -28,22 +28,29 @@ phpVersions=( 8.1 8.0 7.4 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
-variants=( apache fpm fpm-alpine )
+variants=( apache apache-xdebug fpm fpm-alpine )
 defaultVariant='apache'
 
 # declare commands and image bases for given variants
 declare -A cmds=(
     [apache]='apache2-foreground'
+    [apache-xdebug]='apache2-foreground'
     [fpm]='php-fpm'
     [fpm-alpine]='php-fpm'
 )
+# override for php- docker image variants for redaxo- image variants
+declare -A variantOverride=(
+    [apache-xdebug]='apache'
+)
 declare -A bases=(
     [apache]='debian'
+    [apache-xdebug]='debian'
     [fpm]='debian'
     [fpm-alpine]='alpine'
 )
 declare -A variantExtras=(
 	[apache]="$(< templates/apache-extras)"
+	[apache-xdebug]="$(< templates/apache-extras) $(< templates/xdebug-extras)"
 )
 
 # -----------------------------------------------------------------------------
@@ -84,6 +91,7 @@ for phpVersion in "${phpVersions[@]}"; do
 
         # declare cmd and base for current version
         cmd="${cmds[$variant]}"
+        imageVariant="${variantOverride[$variant]:-$variant}"
         base="${bases[$variant]}"
 
         # declare extras for current variant
@@ -113,7 +121,7 @@ for phpVersion in "${phpVersions[@]}"; do
             -e 's!%%REDAXO_VERSION%%!'"$latest"'!g' \
             -e 's!%%REDAXO_SHA1%%!'"$sha1"'!g' \
             -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
-            -e 's!%%VARIANT%%!'"$variant"'!g' \
+            -e 's!%%VARIANT%%!'"$imageVariant"'!g' \
             -e 's!%%VARIANT_EXTRAS%%!'"$(sed_escape_rhs "$extras")"'!g' \
             -e 's!%%CMD%%!'"$cmd"'!g' \
             "templates/Dockerfile-${base}" > "$dir/Dockerfile"

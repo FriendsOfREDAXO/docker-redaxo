@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         php: [ '7.4', '8.0', '8.1' ]
-        type: [ 'apache', 'fpm-alpine', 'fpm' ]
+        type: [ 'apache', 'apache-xdebug', 'fpm-alpine', 'fpm' ]
     steps:
       - uses: actions/checkout@v2
 
