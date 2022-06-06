@@ -28,19 +28,17 @@ phpVersions=( 8.1 8.0 7.4 )
 defaultPhpVersion='7.4'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
-variants=( apache fpm fpm-alpine )
+variants=( apache fpm )
 defaultVariant='apache'
 
 # declare commands and image bases for given variants
 declare -A cmds=(
     [apache]='apache2-foreground'
     [fpm]='php-fpm'
-    [fpm-alpine]='php-fpm'
 )
 declare -A bases=(
     [apache]='debian'
     [fpm]='debian'
-    [fpm-alpine]='alpine'
 )
 declare -A variantExtras=(
 	[apache]="$(< templates/apache-extras)"
@@ -56,7 +54,9 @@ getVersionTree () {
     if [[ $1 =~ ^(0|[1-9][0-9]*)(\\.(0|[1-9][0-9]*))?(\\.(0|[1-9][0-9]*))?$ ]]; then
         version=$1
         for (( i=1; i<=3; i++ )); do
-            versionTree+=($version)
+            if [ $i -gt 1 ]; then
+              versionTree+=($version)
+            fi
             version="${version%\.*}"
         done
         echo $versionTree
