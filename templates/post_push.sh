@@ -8,13 +8,11 @@ set -e
 
 # We provide these individual tags:
 
-# X.X.X-phpX.X-apache
 # X.X  -phpX.X-apache
 # X    -phpX.X-apache
 
 # We also provide general tags based on the default PHP version and the default variant:
 
-# X.X.X
 # X.X
 # X
 
