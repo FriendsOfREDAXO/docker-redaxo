@@ -8,18 +8,16 @@ set -e
 
 # We provide these individual tags:
 
-# X.X.X-phpX.X-apache
 # X.X  -phpX.X-apache
 # X    -phpX.X-apache
 
 # We also provide general tags based on the default PHP version and the default variant:
 
-# X.X.X
 # X.X
 # X
 
 
-for tag in 5.13.3-php8.1-apache 5.13-php8.1-apache 5-php8.1-apache; do
+for tag in 5.13-php8.1-apache 5-php8.1-apache; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag
