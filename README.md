@@ -12,7 +12,7 @@ There’s no official Docker image for [REDAXO](https://github.com/redaxo/redaxo
 Tags follow this scheme: `REDAXO-PHP-Variant`.
 
 * __REDAXO version__ can include major or feature releases, such as: `5`, `5.13`.
-* __PHP versions__: `php7.4`, `php8.0` _(default)_, `php8.1`
+* __PHP versions__: `php7.4`, `php8.0` _(default)_, `php8.1`, `php8.2-rc` 🚀
 * __Variants__: `apache` _(default)_, `fpm`
 
 As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (8.0) and the default variant (Apache).
