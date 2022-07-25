@@ -17,7 +17,7 @@ set -e
 # X
 
 
-for tag in 5.13-php8.0-apache 5.13 5-php8.0-apache 5; do
+for tag in 5.14-php8.0-apache 5.14 5-php8.0-apache 5; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag
