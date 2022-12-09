@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.4', '8.0', '8.1', '8.2-rc' ]
+        php: [ '8.0', '8.1', '8.2' ]
         type: [ 'apache', 'fpm' ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Image ${{ matrix.php }}-${{ matrix.type }}
         run: |

@@ -11,18 +11,17 @@ There’s no official Docker image for [REDAXO](https://github.com/redaxo/redaxo
 
 Tags follow this scheme: `REDAXO-PHP-Variant`.
 
-* __REDAXO version__ can include major or feature releases, such as: `5`, `5.13`.
-* __PHP versions__: `php7.4`, `php8.0` _(default)_, `php8.1`, `php8.2-rc` 🚀
+* __REDAXO version__ can include major or feature releases, such as: `5`, `5.14`.
+* __PHP versions__: `php8.1`, `php8.1` _(default)_, `php8.2`
 * __Variants__: `apache` _(default)_, `fpm`
 
-As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (8.0) and the default variant (Apache).
+As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (8.1) and the default variant (Apache).
 
 Examples:
 
-* `5.13-php7.4-fpm`
-* `5.13-php8.0-fpm`
-* `5.13-php8.0-apache`
-* `5-php8.0-apache`
+* `5.14-php8.1-fpm`
+* `5.14-php8.1-apache`
+* `5-php8.1-apache`
 * `5` 🔥
 
 A [complete list of tags](https://hub.docker.com/r/friendsofredaxo/redaxo/tags) is available at Docker Hub.
@@ -67,7 +66,7 @@ Admin user to be created:
 
 ## Usage
 
-Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 8.0 as our current default version.
+Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 8.1 as our current default version.
 
 ### With [`docker run`](https://docs.docker.com/engine/reference/run/)
 

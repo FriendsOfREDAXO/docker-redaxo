@@ -1,4 +1,4 @@
-FROM php:8.2-rc-fpm
+FROM php:8.2-fpm
 
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \

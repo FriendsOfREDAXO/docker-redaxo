@@ -17,7 +17,7 @@ set -e
 # X
 
 
-for tag in 5.14-php8.2-rc-fpm 5-php8.2-rc-fpm; do
+for tag in 5.14-php8.2-fpm 5-php8.2-fpm; do
 
     docker tag $IMAGE_NAME $DOCKER_REPO:$tag
     docker push $DOCKER_REPO:$tag
