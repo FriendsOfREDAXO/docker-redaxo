@@ -95,7 +95,7 @@ RUN set -eux; \
 VOLUME /var/www/html
 
 # declare REDAXO version and checksum
-ENV REDAXO_VERSION=5.14.2 REDAXO_SHA=13b5e09ed94a909c0dccfdc260cf3de5364441a1
+ENV REDAXO_VERSION=5.14.3 REDAXO_SHA=cee366bf49ab4dc653c67722e461bfe9f057a7f3
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
