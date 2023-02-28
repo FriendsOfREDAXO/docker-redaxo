@@ -52,7 +52,7 @@ RUN set -ex; \
     \
     # install and configure via docker-php-ext
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
-    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-avif; \
     docker-php-ext-install -j "$(nproc)" \
         exif \
         gd \
