@@ -24,7 +24,7 @@ latest=5.15.0
 sha1=ffa10aaab01ffc39425ec31e15c00ec96d948db9
 
 # declare PHP versions
-phpVersions=( 8.2 8.1 8.0 )
+phpVersions=( 8.2 8.1 )
 defaultPhpVersion='8.1'
 
 # declare image variants (like: apache, fpm, fpm-alpine)
