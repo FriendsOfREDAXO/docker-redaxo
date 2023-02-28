@@ -139,7 +139,7 @@ volumes:
 
 ## Recipes
 
-🧁 See [recipes](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/master/recipes) section for further examples!
+🧁 See [recipes](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/recipes) section for further examples!
 
 
 ## Need help?
