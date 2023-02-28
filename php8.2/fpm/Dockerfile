@@ -1,5 +1,9 @@
 FROM php:8.2-fpm
 
+# add debian backports repository
+# see https://wiki.debian.org/Backports
+RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/sources.list
+
 # install persistent PHP extensions (they won't get purged afterwards)
 RUN set -eux; \
     apt-get update; \
@@ -39,6 +43,11 @@ RUN set -ex; \
         libpng-dev \
         libwebp-dev \
         libzip-dev \
+    ; \
+    # install newer packages from backports
+    apt-get install -t bullseye-backports -y --quiet --no-install-recommends \
+        # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=976349
+        libavif-dev \
     ; \
     \
     # install and configure via docker-php-ext
@@ -93,7 +102,7 @@ RUN set -eux; \
 VOLUME /var/www/html
 
 # declare REDAXO version and checksum
-ENV REDAXO_VERSION=5.14.3 REDAXO_SHA=cee366bf49ab4dc653c67722e461bfe9f057a7f3
+ENV REDAXO_VERSION=5.15.0 REDAXO_SHA=ffa10aaab01ffc39425ec31e15c00ec96d948db9
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
