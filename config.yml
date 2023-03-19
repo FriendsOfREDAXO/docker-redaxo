@@ -1,7 +1,7 @@
 redaxo:
   - '5.15':
-      package-url: https://github.com/redaxo/redaxo/releases/download/5.15.0/redaxo_5.15.0.zip;
-      package-sha: ffa10aaab01ffc39425ec31e15c00ec96d948db9
+      package-url: https://github.com/redaxo/redaxo/releases/download/5.15.1/redaxo_5.15.1.zip;
+      package-sha: 7936b2055b670377be97f8c8a4e90ce46f0a6ad7
       use-with-php-version-tag: '8.2'
       use-with-mysql-docker-image: 'mariadb:10.11'
       install-redaxo-via-cli: true
