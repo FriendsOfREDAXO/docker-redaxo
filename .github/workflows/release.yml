@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  pull_request:
+    paths:
+      - 'builds/**/*'
+ 
+ concurrency:
+  # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    # strategy:
+    #   matrix:
+    #     versions: []
+    #     variants: []
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
