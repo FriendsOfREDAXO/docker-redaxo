@@ -59,6 +59,12 @@ for (const currentVariant of variants) {
 		Object.keys(replacements).forEach((key) => {
 			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
 		});
+
+		if (currentVariant["name"] === 'fpm') {
+			// remove block: enable apache modules
+			currentDockerfileSource = currentDockerfileSource.replaceAll(/(# enable apache modules)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
+		}
+
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
 		/**
@@ -96,6 +102,12 @@ for (const currentVariant of variants) {
 		Object.keys(replacements).forEach((key) => {
 			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
 		});
+
+		if (currentVariant["name"] === 'fpm') {
+			// remove block: enable apache modules
+			currentDockerfileSource = currentDockerfileSource.replaceAll(/(# enable apache modules)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
+		}
+
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
 		/**
