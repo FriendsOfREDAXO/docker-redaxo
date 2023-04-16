@@ -4,7 +4,7 @@ FROM php:%%PHP_VERSION_TAG%%
 # see https://wiki.debian.org/Backports
 RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/sources.list
 
-# install persistent PHP extensions (they won't get purged afterwards)
+# install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --quiet --no-install-recommends \
@@ -49,7 +49,6 @@ RUN set -ex; \
         # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=976349
         libavif-dev \
     ; \
-    \
     # install and configure via docker-php-ext
     # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-avif; \
@@ -60,8 +59,7 @@ RUN set -ex; \
         pdo_mysql \
         zip \
     # delete output (except errors)
-    > /dev/null \
-    ; \
+    > /dev/null; \
     \
     # install imagick
     # https://pecl.php.net/package/imagick
@@ -99,6 +97,7 @@ RUN set -eux; \
 # enable apache modules
 RUN set -eux; \
     a2enmod expires headers rewrite
+# stop
 
 # create mount point for web root
 VOLUME /var/www/html
