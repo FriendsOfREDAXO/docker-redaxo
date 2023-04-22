@@ -4,7 +4,7 @@ import { emptyDirSync } from "std/fs/empty_dir.ts";
 import { ensureDirSync } from "std/fs/ensure_dir.ts";
 import { copySync } from "std/fs/copy.ts";
 
-import { removeApacheModules, removeBackportsAndAVIFsupport, supportOldGDlibConfig } from "./lib/index.ts";
+import { removeApacheModules, removeBackportsAndAVIFsupport, removeComposer, removeDeveloperExtensions, supportOldGDlibConfig } from "./lib/index.ts";
 
 const sourceDirectory = 'source';
 const buildsDirectory = 'builds';
@@ -82,6 +82,12 @@ for (const currentVariant of variants) {
 		if (['7.3', '7.2', '7.1', '7.0', '5'].some(el => currentRedaxoVersion["use-with-php-version-tag"].includes(el))) {
 			currentDockerfileSource = supportOldGDlibConfig(currentDockerfileSource);
 		}
+
+		/**
+		 * Remove developer related features
+		 */
+		currentDockerfileSource = removeComposer(currentDockerfileSource);
+		currentDockerfileSource = removeDeveloperExtensions(currentDockerfileSource);
 
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 

@@ -1,3 +1,15 @@
+export const removeComposer = (data: string) => {
+	// remove composer install
+	data = data.replaceAll(/(# install composer)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
+	return data;
+}
+
+export const removeDeveloperExtensions = (data: string) => {
+	// remove developer extensions
+	data = data.replaceAll(/(^\s*)(# install developer extensions)([\s\S]*?)(;\s\\)(\r?\n)/gm, '');
+	return data;
+}
+
 export const removeApacheModules = (data: string) => {
 	// remove enable apache modules
 	data = data.replaceAll(/(# enable apache modules)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
