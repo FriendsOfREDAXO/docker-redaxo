@@ -66,7 +66,7 @@ RUN set -ex; \
 	; \
 	# install imagick
 	# https://pecl.php.net/package/imagick
-	pecl install imagick; \
+	pecl install imagick-3.7.0; \
 		docker-php-ext-enable imagick; \
 		rm -r /tmp/pear; \
 	\
@@ -99,7 +99,8 @@ RUN set -eux; \
 
 # enable apache modules
 RUN set -eux; \
-	a2enmod expires headers rewrite
+	a2enmod expires headers rewrite ssl; \
+	a2ensite default-ssl
 
 # create mount point for web root
 VOLUME /var/www/html

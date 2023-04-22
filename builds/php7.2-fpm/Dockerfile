@@ -40,6 +40,12 @@ RUN set -ex; \
 		libwebp-dev \
 		libzip-dev \
 	; \
+	# install developer extensions
+	apt-get install -y --quiet --no-install-recommends \
+		git \
+		msmtp \
+		msmtp-mta \
+	; \
 	# install and configure via docker-php-ext
 	# see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
 	docker-php-ext-configure gd \
@@ -56,7 +62,7 @@ RUN set -ex; \
 	; \
 	# install imagick
 	# https://pecl.php.net/package/imagick
-	pecl install imagick; \
+	pecl install imagick-3.7.0; \
 		docker-php-ext-enable imagick; \
 		rm -r /tmp/pear; \
 	\
@@ -74,6 +80,9 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
+
+# install composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # enable OPcache
 # see https://secure.php.net/manual/en/opcache.installation.php

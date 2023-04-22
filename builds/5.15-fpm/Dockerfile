@@ -66,7 +66,7 @@ RUN set -ex; \
 	; \
 	# install imagick
 	# https://pecl.php.net/package/imagick
-	pecl install imagick; \
+	pecl install imagick-3.7.0; \
 		docker-php-ext-enable imagick; \
 		rm -r /tmp/pear; \
 	\
