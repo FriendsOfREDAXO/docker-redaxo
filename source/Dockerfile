@@ -85,6 +85,9 @@ RUN set -ex; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
+# install composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
 # enable OPcache
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN set -eux; \
