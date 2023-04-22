@@ -1,8 +1,10 @@
-import { isArray, isObject } from "https://deno.land/std@0.182.0/yaml/_utils.ts";
-import { parse } from "https://deno.land/std@0.182.0/yaml/parse.ts";
-import { emptyDirSync } from "https://deno.land/std@0.182.0/fs/empty_dir.ts";
-import { ensureDirSync } from "https://deno.land/std@0.182.0/fs/ensure_dir.ts";
-import { copySync } from "https://deno.land/std@0.182.0/fs/copy.ts";
+import { isArray, isObject } from "std/yaml/_utils.ts";
+import { parse } from "std/yaml/parse.ts";
+import { emptyDirSync } from "std/fs/empty_dir.ts";
+import { ensureDirSync } from "std/fs/ensure_dir.ts";
+import { copySync } from "std/fs/copy.ts";
+
+import { removeApacheModules, removeBackportsAndAVIFsupport, supportOldGDlibConfig } from "./lib/index.ts";
 
 const sourceDirectory = 'source';
 const buildsDirectory = 'builds';
@@ -47,7 +49,7 @@ for (const currentVariant of variants) {
 		ensureDirSync(targetDir);
 
 		/**
-		 * Generate Dockerfile with replaced values for current version and write to builds folder
+		 * Handle placeholders
 		 */
 		const replacements: Record<string, string> = {
 			'%%PHP_VERSION_TAG%%': `${currentRedaxoVersion["use-with-php-version-tag"]}-${currentVariant["name"]}`,
@@ -60,9 +62,25 @@ for (const currentVariant of variants) {
 			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
 		});
 
+		/**
+		 * Remove apache specific code from FPM variant
+		 */
 		if (currentVariant["name"] === 'fpm') {
-			// remove block: enable apache modules
-			currentDockerfileSource = currentDockerfileSource.replaceAll(/(# enable apache modules)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
+			currentDockerfileSource = removeApacheModules(currentDockerfileSource);
+		}
+
+		/**
+		 * Remove AVIF support from PHP 8.0 and below
+		 */
+		if (['8.0', '7', '5'].some(el => currentRedaxoVersion["use-with-php-version-tag"].includes(el))) {
+			currentDockerfileSource = removeBackportsAndAVIFsupport(currentDockerfileSource);
+		}
+
+		/**
+		 * Handle gd lib configuration in PHP 7.3 and below
+		 */
+		if (['7.3', '7.2', '7.1', '7.0', '5'].some(el => currentRedaxoVersion["use-with-php-version-tag"].includes(el))) {
+			currentDockerfileSource = supportOldGDlibConfig(currentDockerfileSource);
 		}
 
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
@@ -88,7 +106,7 @@ for (const currentVariant of variants) {
 		ensureDirSync(targetDir);
 
 		/**
-		 * Generate Dockerfile with replaced values for current version and write to builds folder
+		 * Handle placeholders
 		 */
 		const currentRedaxoVersionTag = currentPhpVersion["use-with-redaxo-version-tag"];
 		const currentRedaxoVersion = redaxoVersions.find(({ version }) => version === currentRedaxoVersionTag);
@@ -103,9 +121,25 @@ for (const currentVariant of variants) {
 			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
 		});
 
+		/**
+		 * Remove apache specific code from FPM variant
+		 */
 		if (currentVariant["name"] === 'fpm') {
-			// remove block: enable apache modules
-			currentDockerfileSource = currentDockerfileSource.replaceAll(/(# enable apache modules)([\s\S]*?)(^\s*$)(\r?\n)/gm, '');
+			currentDockerfileSource = removeApacheModules(currentDockerfileSource);
+		}
+
+		/**
+		 * Remove AVIF support from PHP 8.0 and below
+		 */
+		if (['8.0', '7', '5'].some(el => currentPhpVersion["version"].includes(el))) {
+			currentDockerfileSource = removeBackportsAndAVIFsupport(currentDockerfileSource);
+		}
+
+		/**
+		 * Handle gd lib configuration in PHP 7.3 and below
+		 */
+		if (['7.3', '7.2', '7.1', '7.0', '5'].some(el => currentPhpVersion["version"].includes(el))) {
+			currentDockerfileSource = supportOldGDlibConfig(currentDockerfileSource);
 		}
 
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
