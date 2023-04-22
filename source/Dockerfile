@@ -108,7 +108,8 @@ RUN set -eux; \
 
 # enable apache modules
 RUN set -eux; \
-	a2enmod expires headers rewrite
+	a2enmod expires headers rewrite ssl; \
+	a2ensite default-ssl
 
 # create mount point for web root
 VOLUME /var/www/html
