@@ -38,6 +38,7 @@ emptyDirSync(buildsDirectory);
  * Generate builds
  */
 const dockerfileSource = Deno.readTextFileSync(`${sourceDirectory}/Dockerfile`);
+const dockerComposeFileSource = Deno.readTextFileSync(`${sourceDirectory}/docker-compose.yml`);
 
 for (const currentVariant of variants) {
 
@@ -49,8 +50,10 @@ for (const currentVariant of variants) {
 		ensureDirSync(targetDir);
 
 		/**
-		 * Handle placeholders
+		 * Generate Dockerfile
 		 */
+
+		// handle placeholders
 		const replacements: Record<string, string> = {
 			'%%PHP_VERSION_TAG%%': `${currentRedaxoVersion["use-with-php-version-tag"]}-${currentVariant["name"]}`,
 			'%%PACKAGE_URL%%': `${currentRedaxoVersion["package-url"]}`,
@@ -62,34 +65,40 @@ for (const currentVariant of variants) {
 			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
 		});
 
-		/**
-		 * Remove apache specific code from FPM variant
-		 */
+		// Remove apache specific code from FPM variant
 		if (currentVariant["name"] === 'fpm') {
 			currentDockerfileSource = removeApacheModules(currentDockerfileSource);
 		}
 
-		/**
-		 * Remove AVIF support from PHP 8.0 and below
-		 */
+		// Remove AVIF support from PHP 8.0 and below
 		if (['8.0', '7', '5'].some(el => currentRedaxoVersion["use-with-php-version-tag"].includes(el))) {
 			currentDockerfileSource = removeBackportsAndAVIFsupport(currentDockerfileSource);
 		}
 
-		/**
-		 * Handle gd lib configuration in PHP 7.3 and below
-		 */
+		// Handle gd lib configuration in PHP 7.3 and below
 		if (['7.3', '7.2', '7.1', '7.0', '5'].some(el => currentRedaxoVersion["use-with-php-version-tag"].includes(el))) {
 			currentDockerfileSource = supportOldGDlibConfig(currentDockerfileSource);
 		}
 
-		/**
-		 * Remove developer related features
-		 */
+		// Remove developer related features
 		currentDockerfileSource = removeComposer(currentDockerfileSource);
 		currentDockerfileSource = removeDeveloperExtensions(currentDockerfileSource);
 
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
+
+		/**
+		 * Generate docker-compose.yml
+		 */
+		const DockerComposeFileReplacements: Record<string, string> = {
+			'%%REDAXO_SERVERNAME%%': `REDAXO ${currentRedaxoVersion["version"]}`,
+			'%%DB_IMAGE%%': currentRedaxoVersion["use-with-mysql-docker-image"],
+		};
+		let currentDockerComposeFileSource = dockerComposeFileSource;
+		Object.keys(DockerComposeFileReplacements).forEach((key) => {
+			currentDockerComposeFileSource = currentDockerComposeFileSource.replaceAll(key, DockerComposeFileReplacements[key]);
+		});
+
+		Deno.writeTextFileSync(`${targetDir}/docker-compose.yml`, currentDockerComposeFileSource);
 
 		/**
 		 * Copy static files that do not require replacements
@@ -111,44 +120,55 @@ for (const currentVariant of variants) {
 		const targetDir = `${buildsDirectory}/php${currentPhpVersion["version"]}-${currentVariant["name"]}`;
 		ensureDirSync(targetDir);
 
-		/**
-		 * Handle placeholders
-		 */
 		const currentRedaxoVersionTag = currentPhpVersion["use-with-redaxo-version-tag"];
 		const currentRedaxoVersion = redaxoVersions.find(({ version }) => version === currentRedaxoVersionTag);
-		const replacements: Record<string, string> = {
+
+		/**
+		 * Generate Dockerfile
+		 */
+
+		// handle placeholders
+		const DockerfileReplacements: Record<string, string> = {
 			'%%PHP_VERSION_TAG%%': `${currentPhpVersion["version"]}-${currentVariant["name"]}`,
 			'%%PACKAGE_URL%%': `${currentRedaxoVersion["package-url"]}`,
 			'%%PACKAGE_SHA%%': `${currentRedaxoVersion["package-sha"]}`,
 			'%%CMD%%': `${currentVariant["cmd"]}`,
 		};
 		let currentDockerfileSource = dockerfileSource;
-		Object.keys(replacements).forEach((key) => {
-			currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
+		Object.keys(DockerfileReplacements).forEach((key) => {
+			currentDockerfileSource = currentDockerfileSource.replaceAll(key, DockerfileReplacements[key]);
 		});
 
-		/**
-		 * Remove apache specific code from FPM variant
-		 */
+		// Remove apache specific code from FPM variant
 		if (currentVariant["name"] === 'fpm') {
 			currentDockerfileSource = removeApacheModules(currentDockerfileSource);
 		}
 
-		/**
-		 * Remove AVIF support from PHP 8.0 and below
-		 */
+		// Remove AVIF support from PHP 8.0 and below
 		if (['8.0', '7', '5'].some(el => currentPhpVersion["version"].includes(el))) {
 			currentDockerfileSource = removeBackportsAndAVIFsupport(currentDockerfileSource);
 		}
 
-		/**
-		 * Handle gd lib configuration in PHP 7.3 and below
-		 */
+		// Handle gd lib configuration in PHP 7.3 and below
 		if (['7.3', '7.2', '7.1', '7.0', '5'].some(el => currentPhpVersion["version"].includes(el))) {
 			currentDockerfileSource = supportOldGDlibConfig(currentDockerfileSource);
 		}
 
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
+
+		/**
+		 * Generate docker-compose.yml
+		 */
+		const DockerComposeFileReplacements: Record<string, string> = {
+			'%%REDAXO_SERVERNAME%%': `REDAXO ${currentRedaxoVersion["version"]}`,
+			'%%DB_IMAGE%%': currentRedaxoVersion["use-with-mysql-docker-image"],
+		};
+		let currentDockerComposeFileSource = dockerComposeFileSource;
+		Object.keys(DockerComposeFileReplacements).forEach((key) => {
+			currentDockerComposeFileSource = currentDockerComposeFileSource.replaceAll(key, DockerComposeFileReplacements[key]);
+		});
+
+		Deno.writeTextFileSync(`${targetDir}/docker-compose.yml`, currentDockerComposeFileSource);
 
 		/**
 		 * Copy static files that do not require replacements
