@@ -38,7 +38,6 @@ emptyDirSync(buildsDirectory);
  * Generate builds
  */
 const dockerfileSource = Deno.readTextFileSync(`${sourceDirectory}/Dockerfile`);
-const dockerComposeFileSource = Deno.readTextFileSync(`${sourceDirectory}/docker-compose.yml`);
 
 for (const currentVariant of variants) {
 
@@ -87,25 +86,10 @@ for (const currentVariant of variants) {
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
 		/**
-		 * Generate docker-compose.yml
-		 */
-		const DockerComposeFileReplacements: Record<string, string> = {
-			'%%REDAXO_SERVERNAME%%': `REDAXO ${currentRedaxoVersion["version"]}`,
-			'%%DB_IMAGE%%': currentRedaxoVersion["use-with-mysql-docker-image"],
-		};
-		let currentDockerComposeFileSource = dockerComposeFileSource;
-		Object.keys(DockerComposeFileReplacements).forEach((key) => {
-			currentDockerComposeFileSource = currentDockerComposeFileSource.replaceAll(key, DockerComposeFileReplacements[key]);
-		});
-
-		Deno.writeTextFileSync(`${targetDir}/docker-compose.yml`, currentDockerComposeFileSource);
-
-		/**
 		 * Copy static files that do not require replacements
 		 */
 		const filesToCopy = [
-			`docker-entrypoint.sh`,
-			`README.md`
+			`docker-entrypoint.sh`
 		];
 		filesToCopy.forEach(file => {
 			copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
@@ -157,25 +141,10 @@ for (const currentVariant of variants) {
 		Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
 		/**
-		 * Generate docker-compose.yml
-		 */
-		const DockerComposeFileReplacements: Record<string, string> = {
-			'%%REDAXO_SERVERNAME%%': `REDAXO ${currentRedaxoVersion["version"]}`,
-			'%%DB_IMAGE%%': currentRedaxoVersion["use-with-mysql-docker-image"],
-		};
-		let currentDockerComposeFileSource = dockerComposeFileSource;
-		Object.keys(DockerComposeFileReplacements).forEach((key) => {
-			currentDockerComposeFileSource = currentDockerComposeFileSource.replaceAll(key, DockerComposeFileReplacements[key]);
-		});
-
-		Deno.writeTextFileSync(`${targetDir}/docker-compose.yml`, currentDockerComposeFileSource);
-
-		/**
 		 * Copy static files that do not require replacements
 		 */
 		const filesToCopy = [
-			`docker-entrypoint.sh`,
-			`README.md`
+			`docker-entrypoint.sh`
 		];
 		filesToCopy.forEach(file => {
 			copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
