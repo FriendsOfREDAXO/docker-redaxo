@@ -3,8 +3,8 @@ name: Build
 on:
   pull_request:
     paths:
-      - 'sources/**/*'
- 
+      - 'source/**/*'
+
  concurrency:
   # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
@@ -16,11 +16,14 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
 
-    # strategy:
-    #   matrix:
-    #     versions: []
-    #     variants: []
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+        	deno-version: "^1"
+
+      - name: Run build
+        run: deno task start
