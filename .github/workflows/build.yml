@@ -23,7 +23,7 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
-        	deno-version: "^1"
+          deno-version: "^1"
 
       - name: Run build
         run: deno task start
