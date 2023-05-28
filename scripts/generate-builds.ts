@@ -89,7 +89,8 @@ for (const currentVariant of variants) {
 		 * Copy static files that do not require replacements
 		 */
 		const filesToCopy = [
-			`docker-entrypoint.sh`
+			`docker-entrypoint.sh`,
+			`README.md`,
 		];
 		filesToCopy.forEach(file => {
 			copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
@@ -144,7 +145,8 @@ for (const currentVariant of variants) {
 		 * Copy static files that do not require replacements
 		 */
 		const filesToCopy = [
-			`docker-entrypoint.sh`
+			`docker-entrypoint.sh`,
+			`README.md`,
 		];
 		filesToCopy.forEach(file => {
 			copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
