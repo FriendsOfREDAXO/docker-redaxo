@@ -19,6 +19,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          # Ref is required if auto-commit action is used in pull requests.
+          # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
+          ref: ${{ github.head_ref }}
+          # Token is required to trigger new workflow runs after auto-commit action.
+          # https://github.com/stefanzweifel/git-auto-commit-action#commits-made-by-this-action-do-not-trigger-new-workflow-runs
+          token: ${{ secrets.GH_WORKFLOW }}
 
       - name: Setup Deno
         uses: denoland/setup-deno@v1
