@@ -27,3 +27,17 @@ jobs:
 
       - name: Run build
         run: deno task start
+
+      - name: Update repository
+        # Git pull to make sure the repo is not dirty.
+        run: git pull --ff-only
+
+      - name: Auto-commit changed files
+        # Automatically commit files which have been changed during the workflow run and push changes back
+        # to remote repository.
+        # https://github.com/stefanzweifel/git-auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'build'
+          commit_author: GitHub Actions <actions@github.com>
+          file_pattern: 'builds/**/*'
