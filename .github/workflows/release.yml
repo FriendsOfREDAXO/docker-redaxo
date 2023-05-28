@@ -6,10 +6,10 @@ on:
       - 'builds/**/*'
 
 concurrency:
-# Cancel in-progress jobs if a new job is trigged by a commit from the same branch
-# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
-group: ${{ github.workflow }}-${{ github.ref }}
-cancel-in-progress: true
+	# Cancel in-progress jobs if a new job is trigged by a commit from the same branch
+	# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+	group: ${{ github.workflow }}-${{ github.ref }}
+	cancel-in-progress: true
 
 jobs:
   release:
