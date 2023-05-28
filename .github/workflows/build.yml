@@ -28,10 +28,6 @@ jobs:
       - name: Run build
         run: deno task start
 
-      - name: Update repository
-        # Git pull to make sure the repo is not dirty.
-        run: git pull --ff-only
-
       - name: Auto-commit changed files
         # Automatically commit files which have been changed during the workflow run and push changes back
         # to remote repository.
