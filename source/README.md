@@ -2,4 +2,4 @@
 
 TODO
 
-foobar baz
+foobar
