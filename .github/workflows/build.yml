@@ -42,6 +42,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'build'
-          commit_user_name: 'FriendsOfREDAXO-T'
-          commit_user_email: 'FriendsOfREDAXO-T@users.noreply.github.com'
+          #commit_user_name: 'FriendsOfREDAXO-T'
+          #commit_user_email: 'FriendsOfREDAXO-T@users.noreply.github.com'
+          commit_author: 'FriendsOfREDAXO-T <FriendsOfREDAXO-T@users.noreply.github.com>'
           file_pattern: 'builds/**/*'
