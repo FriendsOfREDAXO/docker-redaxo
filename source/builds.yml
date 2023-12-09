@@ -1,0 +1,14 @@
+builds:
+  - name: "5-stable"
+    tags:
+      - "5-stable"
+      - "5"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.15.1/redaxo_5.15.1.zip"
+    package-sha: "7936b2055b670377be97f8c8a4e90ce46f0a6ad7"
+    php-version: "8.2"
+  - name: "5-edge"
+    tags:
+      - "5-edge"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.15.1/redaxo_5.15.1.zip"
+    package-sha: "7936b2055b670377be97f8c8a4e90ce46f0a6ad7"
+    php-version: "8.3"
