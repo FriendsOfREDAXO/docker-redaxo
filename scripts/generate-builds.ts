@@ -1,5 +1,5 @@
 import { isArray, isObject } from "std/yaml/_utils.ts";
-import { parse } from "std/yaml/parse.ts";
+import { parse, stringify } from "std/yaml/mod.ts";
 import { emptyDirSync } from "std/fs/empty_dir.ts";
 import { ensureDirSync } from "std/fs/ensure_dir.ts";
 import { copySync } from "std/fs/copy.ts";
@@ -43,8 +43,6 @@ for (const build of builds) {
 	/**
 	 * Generate Dockerfile
 	 */
-
-	// handle placeholders
 	const replacements: Record<string, string> = {
 		'%%PHP_VERSION_TAG%%': `${build["php-version"]}`,
 		'%%PACKAGE_URL%%': `${build["package-url"]}`,
@@ -62,9 +60,14 @@ for (const build of builds) {
 	 */
 	const filesToCopy = [
 		`docker-entrypoint.sh`,
-		`README.md`,
 	];
 	filesToCopy.forEach(file => {
 		copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
 	})
+
+	/**
+	 * Generate tag list
+	 */
+	const tagList = stringify({ tags: build["tags"] });
+	Deno.writeTextFileSync(`${targetDir}/tags.yml`, tagList);
 }
