@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.208.0/"
+  },
+  "tasks": {
+    "lint": "deno lint",
+    "generate-builds": "deno run --allow-read --allow-write --allow-sys scripts/generate-builds.ts",
+    "start": "deno task lint && deno task generate-builds"
+  }
+}
