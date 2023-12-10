@@ -3,7 +3,7 @@ name: Test
 on:
   pull_request:
     paths:
-      - 'builds/**/*'
+      - 'images/**/*'
 
 concurrency:
   # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
@@ -13,9 +13,11 @@ concurrency:
 
 jobs:
   test:
-    name: Test
+    name: Test the images
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false

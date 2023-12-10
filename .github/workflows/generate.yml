@@ -1,4 +1,4 @@
-name: Build
+name: Generate
 
 on:
   pull_request:
@@ -12,13 +12,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build
+  generate:
+    name: Generate image files from source
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Ref is required if auto-commit action is used in pull requests.
           # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
@@ -32,17 +32,17 @@ jobs:
         with:
           deno-version: "^1"
 
-      - name: Run build
+      - name: Run generator script
         run: deno task start
 
       - name: Auto-commit changed files
         # Automatically commit files which have been changed during the workflow run and push changes back
         # to remote repository.
         # https://github.com/stefanzweifel/git-auto-commit-action
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'build: rRRR!'
+          commit_message: 'GenerRRRRR-ate image files from source!'
           commit_user_name: 'FriendsOfREDAXO-T'
           commit_user_email: 'FriendsOfREDAXO-T@users.noreply.github.com'
           commit_author: 'FriendsOfREDAXO-T <FriendsOfREDAXO-T@users.noreply.github.com>'
-          file_pattern: 'builds/**/*'
+          file_pattern: 'images/**/*'
