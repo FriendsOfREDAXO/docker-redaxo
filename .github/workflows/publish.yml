@@ -2,10 +2,10 @@ name: Publish
 
 on:
   push:
-    branches:
-      - "main"
-    paths:
-      - "images/**/*"
+    # branches:
+    #   - "main"
+    # paths:
+    #   - "images/**/*"
   # add workflow dispatch to manually publish the current images
   workflow_dispatch:
 
@@ -31,11 +31,8 @@ jobs:
       - name: Collect images from directories
         id: images
         run: |
-          # install tree and jq
           sudo apt update && sudo apt install -y tree jq
-          # change to images directory
           cd images
-          # collect images
           echo "directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')" >> $GITHUB_OUTPUT
 
   publish:
