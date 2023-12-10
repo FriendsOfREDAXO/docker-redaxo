@@ -3,7 +3,7 @@ name: Test
 on:
   pull_request:
     paths:
-      - 'images/**/*'
+      - "images/**/*"
 
 concurrency:
   # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
