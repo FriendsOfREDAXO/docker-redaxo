@@ -1,4 +1,4 @@
-builds:
+images:
   - name: "5-stable"
     tags:
       - "5-stable"

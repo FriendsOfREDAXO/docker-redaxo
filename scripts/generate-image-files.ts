@@ -1,52 +1,50 @@
 import { isArray, isObject } from "std/yaml/_utils.ts";
 import { parse, stringify } from "std/yaml/mod.ts";
-import { emptyDirSync } from "std/fs/empty_dir.ts";
-import { ensureDirSync } from "std/fs/ensure_dir.ts";
-import { copySync } from "std/fs/copy.ts";
+import { emptyDirSync, ensureDirSync, copySync } from "std/fs/mod.ts";
 
 const sourceDirectory = 'source';
-const buildsDirectory = 'builds';
+const imagesDirectory = 'images';
 
 /**
- * Prepare build configuration
+ * Prepare image configuration
  */
-const buildConfiguration = parse(Deno.readTextFileSync(`${sourceDirectory}/builds.yml`));
+const imageConfiguration = parse(Deno.readTextFileSync(`${sourceDirectory}/images.yml`));
 
-if (!isObject(buildConfiguration)) {
-	console.error("Invalid build configuration!");
+if (!isObject(imageConfiguration)) {
+	console.error("Invalid image configuration!");
 	Deno.exit(1);
 }
 
-const builds = buildConfiguration["builds"];
+const images = imageConfiguration["images"];
 
-if (!isArray(builds)) {
-	console.error("Invalid builds array!");
+if (!isArray(images)) {
+	console.error("Invalid images array!");
 	Deno.exit(1);
 }
 
 /**
- * Clear builds directory
- * Hint: we want all builds to be removed that are no longer contained in the build configuration
+ * Clear images directory
+ * Hint: we want all images to be removed that are no longer contained in the image configuration
  */
-emptyDirSync(buildsDirectory);
+emptyDirSync(imagesDirectory);
 
 /**
- * Generate builds
+ * Generate images
  */
 const dockerfileSource = Deno.readTextFileSync(`${sourceDirectory}/Dockerfile`);
 
-for (const build of builds) {
+for (const image of images) {
 
-	const targetDir = `${buildsDirectory}/${build["name"]}`;
+	const targetDir = `${imagesDirectory}/${image["name"]}`;
 	ensureDirSync(targetDir);
 
 	/**
 	 * Generate Dockerfile
 	 */
 	const replacements: Record<string, string> = {
-		'%%PHP_VERSION_TAG%%': `${build["php-version"]}`,
-		'%%PACKAGE_URL%%': `${build["package-url"]}`,
-		'%%PACKAGE_SHA%%': `${build["package-sha"]}`,
+		'%%PHP_VERSION_TAG%%': `${image["php-version"]}`,
+		'%%PACKAGE_URL%%': `${image["package-url"]}`,
+		'%%PACKAGE_SHA%%': `${image["package-sha"]}`,
 	};
 	let currentDockerfileSource = dockerfileSource;
 	Object.keys(replacements).forEach((key) => {
@@ -68,6 +66,6 @@ for (const build of builds) {
 	/**
 	 * Generate tag list
 	 */
-	const tagList = stringify({ tags: build["tags"] });
+	const tagList = stringify({ tags: image["tags"] });
 	Deno.writeTextFileSync(`${targetDir}/tags.yml`, tagList);
 }

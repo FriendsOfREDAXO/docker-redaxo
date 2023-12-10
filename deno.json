@@ -4,7 +4,7 @@
   },
   "tasks": {
     "lint": "deno lint",
-    "generate-builds": "deno run --allow-read --allow-write --allow-sys scripts/generate-builds.ts",
-    "start": "deno task lint && deno task generate-builds"
+    "generate-image-files": "deno run --allow-read --allow-write --allow-sys scripts/generate-image-files.ts",
+    "start": "deno task lint && deno task generate-image-files"
   }
 }
