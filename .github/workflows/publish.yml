@@ -32,7 +32,9 @@ jobs:
         id: images
         run: |
           cd images
-          echo "directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')" >> $GITHUB_OUTPUT
+					directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')
+					echo $directories
+          echo "directories=$directories" >> $GITHUB_OUTPUT
 
   publish:
     name: Publish
