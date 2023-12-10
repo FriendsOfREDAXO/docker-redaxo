@@ -31,12 +31,11 @@ jobs:
       - name: Collect images from directories
         id: images
         run: |
-          sudo apt update && sudo apt install -y tree jq
           cd images
           echo "directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')" >> $GITHUB_OUTPUT
 
   publish:
-    name: Publish images
+    name: Publish
     runs-on: ubuntu-latest
     needs: [collect]
 
