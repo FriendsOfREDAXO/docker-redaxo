@@ -51,7 +51,7 @@ jobs:
       - name: Build and export to Docker
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./images/${{ matrix.image }}
           load: true
           tags: ${{ matrix.image }}
 

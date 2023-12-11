@@ -2,10 +2,10 @@ name: Publish
 
 on:
   push:
-    # branches:
-    #   - "main"
-    # paths:
-    #   - "images/**/*"
+    branches:
+      - "main"
+    paths:
+      - "images/**/*"
   # add workflow dispatch to manually publish the current images
   workflow_dispatch:
 
