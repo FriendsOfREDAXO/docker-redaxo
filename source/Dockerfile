@@ -1,9 +1,5 @@
 FROM php:%%PHP_VERSION_TAG%%
 
-# add debian backports repository
-# see https://wiki.debian.org/Backports
-RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/sources.list
-
 # install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
 	apt-get update; \
@@ -42,12 +38,8 @@ RUN set -ex; \
 		libmcrypt-dev \
 		libpng-dev \
 		libwebp-dev \
-		libzip-dev \
-	; \
-	# install newer packages from backports
-	apt-get install -t bullseye-backports -y --quiet --no-install-recommends \
-		# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=976349
 		libavif-dev \
+		libzip-dev \
 	; \
 	# install developer extensions
 	apt-get install -y --quiet --no-install-recommends \
