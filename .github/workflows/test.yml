@@ -12,12 +12,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test the images
+  collect:
+    name: Collect images from directories
     runs-on: ubuntu-latest
+    outputs:
+      IMAGES: ${{ steps.images.outputs.directories }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Collect images from directories
+        id: images
+        run: |
+          cd images
+          directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')
+          echo $directories
+          echo "directories=$directories" >> $GITHUB_OUTPUT
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [collect]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(needs.collect.outputs.IMAGES) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ matrix.image }}
+
+      - name: Test build
+        run: docker run --rm ${{ matrix.image }}
