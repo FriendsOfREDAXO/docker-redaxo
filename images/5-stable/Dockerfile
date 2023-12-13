@@ -34,7 +34,7 @@ RUN set -ex; \
 	apt-get install -y --quiet --no-install-recommends \
 		libfreetype6-dev \
 		libjpeg-dev \
-		# libmagickwand-dev \
+		libmagickwand-dev \
 		libmcrypt-dev \
 		libpng-dev \
 		libwebp-dev \
