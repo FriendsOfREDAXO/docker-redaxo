@@ -1,4 +1,4 @@
-FROM php:%%PHP_VERSION_TAG%%
+FROM php:%%PHP_VERSION_TAG%%-apache
 
 # install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
