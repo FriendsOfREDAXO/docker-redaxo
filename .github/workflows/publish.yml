@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    branches:
-      - "main"
+    # branches:
+    #   - "main"
     paths:
       - "images/**/*"
   # add workflow dispatch to manually publish the current images
@@ -80,6 +80,8 @@ jobs:
           context: ./images/${{ matrix.image }}
           platforms: linux/amd64,linux/arm64
           push: true
+          # tags: |
+          #   ${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
+          #   ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
           tags: |
-            # ${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
             ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}

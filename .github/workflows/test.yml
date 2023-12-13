@@ -33,7 +33,7 @@ jobs:
           echo "directories=$directories" >> $GITHUB_OUTPUT
 
   test:
-    name: Test build
+    name: Test
     runs-on: ubuntu-latest
     needs: [collect]
 
