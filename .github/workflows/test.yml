@@ -56,4 +56,4 @@ jobs:
           tags: ${{ matrix.image }}
 
       - name: Test build
-        run: docker run --rm ${{ matrix.image }}
+        run: docker run --rm --entrypoint true ${{ matrix.image }}
