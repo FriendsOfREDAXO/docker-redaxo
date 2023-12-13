@@ -1,4 +1,4 @@
-FROM php:8.3
+FROM php:8.3-apache
 
 # install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
@@ -69,13 +69,13 @@ RUN set -ex; \
 		rm -r /tmp/pear; \
 	\
 	# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	# see https://github.com/docker-library/wordpress/blob/master/Dockerfile-debian.template
+	# see https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
 	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
 		| sort -u \
-		| xargs -r dpkg-query -S \
+		| xargs -r dpkg-query --search \
 		| cut -d: -f1 \
 		| sort -u \
 		| xargs -rt apt-mark manual; \
@@ -95,7 +95,6 @@ RUN set -eux; \
 		echo 'opcache.interned_strings_buffer=8'; \
 		echo 'opcache.max_accelerated_files=4000'; \
 		echo 'opcache.revalidate_freq=2'; \
-		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # enable apache modules
