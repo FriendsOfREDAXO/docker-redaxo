@@ -54,7 +54,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./images/${{ matrix.image }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           load: true
           tags: ${{ matrix.image }}
