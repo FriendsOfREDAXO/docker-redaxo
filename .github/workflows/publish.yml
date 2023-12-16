@@ -68,7 +68,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       # - name: Login to Docker Hub
-			#   # https://github.com/docker/login-action
+      #   # https://github.com/docker/login-action
       #   uses: docker/login-action@v3
       #   with:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -96,7 +96,7 @@ jobs:
       #       ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
 
       # - name: Update repo description
-			#   # https://github.com/peter-evans/dockerhub-description
+      #   # https://github.com/peter-evans/dockerhub-description
       #   uses: peter-evans/dockerhub-description@v3
       #   with:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
