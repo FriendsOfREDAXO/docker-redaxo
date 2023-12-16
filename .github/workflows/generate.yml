@@ -28,6 +28,7 @@ jobs:
           token: ${{ secrets.GH_WORKFLOW }}
 
       - name: Setup Deno
+        # https://github.com/denoland/setup-deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: "^1"

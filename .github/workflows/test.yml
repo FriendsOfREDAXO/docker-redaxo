@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
+        # https://github.com/actions/checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -48,9 +49,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build
+      - name: Build and push
+        # https://github.com/docker/build-push-action
         uses: docker/build-push-action@v5
         with:
           context: ./images/${{ matrix.image }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           load: true
           tags: ${{ matrix.image }}

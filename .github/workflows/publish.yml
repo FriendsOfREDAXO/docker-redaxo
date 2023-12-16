@@ -30,6 +30,7 @@ jobs:
 
     steps:
       - name: Checkout repository
+        # https://github.com/actions/checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -59,18 +60,22 @@ jobs:
           persist-credentials: false
 
       - name: Set up QEMU
+        # https://github.com/docker/setup-qemu-action
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
+        # https://github.com/docker/setup-buildx-action
         uses: docker/setup-buildx-action@v3
 
       # - name: Login to Docker Hub
+			#   # https://github.com/docker/login-action
       #   uses: docker/login-action@v3
       #   with:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
+        # https://github.com/docker/login-action
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -78,9 +83,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        # https://github.com/docker/build-push-action
         uses: docker/build-push-action@v5
         with:
           context: ./images/${{ matrix.image }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
           # tags: |
@@ -88,3 +96,24 @@ jobs:
           #   ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
           tags: |
             ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
+
+      # - name: Update repo description
+			#   # https://github.com/peter-evans/dockerhub-description
+      #   uses: peter-evans/dockerhub-description@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     short-description: ${{ github.event.repository.description }}
+      #     enable-url-completion: true
+
+      - name: Delete untagged containers from GitHub Container Registry
+        # https://github.com/Chizkiyahu/delete-untagged-ghcr-action
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repository_owner: ${{ github.repository_owner }}
+          repository: ${{ github.repository }}
+          untagged_only: true
+          owner_type: org
+          except_untagged_multiplatform: true
