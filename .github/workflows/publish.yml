@@ -85,7 +85,7 @@ jobs:
 
       - name: Collect tags for image
         # https://github.com/marketplace/actions/yq-portable-yaml-processor
-        uses: mikefarah/yq@v4
+        uses: mikefarah/yq@master
         id: collect_tags
         with:
           cmd: yq '.tags | @csv' ./images/${{ matrix.image }}/tags.yml
