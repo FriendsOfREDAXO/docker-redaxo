@@ -55,48 +55,57 @@ jobs:
 
     steps:
       - name: Checkout repository
+        # https://github.com/marketplace/actions/checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Set up QEMU
-        # https://github.com/docker/setup-qemu-action
+        # https://github.com/marketplace/actions/docker-setup-qemu
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        # https://github.com/docker/setup-buildx-action
+        # https://github.com/marketplace/actions/docker-setup-buildx
         uses: docker/setup-buildx-action@v3
 
       # - name: Login to Docker Hub
-      #   # https://github.com/docker/login-action
+      #   # https://github.com/marketplace/actions/docker-login
       #   uses: docker/login-action@v3
       #   with:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        # https://github.com/docker/login-action
+        # https://github.com/marketplace/actions/docker-login
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Build and push
-      #   # https://github.com/docker/build-push-action
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: ./images/${{ matrix.image }}
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     # tags: |
-      #     #   ${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
-      #     #   ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
-      #     tags: |
-      #       ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ matrix.image }}
+      - name: Collect tags for image
+        # https://github.com/marketplace/actions/yq-portable-yaml-processor
+        uses: mikefarah/yq@v4
+        id: collect_tags
+        with:
+          cmd: yq '.tags | @csv' ./images/${{ matrix.image }}/tags.yml
+
+      - name: Build and push
+        # https://github.com/marketplace/actions/build-and-push-docker-images
+        uses: docker/build-push-action@v5
+        with:
+          context: ./images/${{ matrix.image }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: false
+          # tags: |
+          #   ${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
+          #   ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
+          tags: |
+            ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
 
       # - name: Update repo description
-      #   # https://github.com/peter-evans/dockerhub-description
+      #   # https://github.com/marketplace/actions/docker-hub-description
       #   uses: peter-evans/dockerhub-description@v3
       #   with:
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -106,10 +115,10 @@ jobs:
       #     enable-url-completion: true
 
       - name: Delete untagged containers from GitHub Container Registry
-        # https://github.com/Chizkiyahu/delete-untagged-ghcr-action
+        # https://github.com/marketplace/actions/delete-untagged-ghcr
         uses: Chizkiyahu/delete-untagged-ghcr-action@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PACKAGES }}
           untagged_only: true
           owner_type: org
           except_untagged_multiplatform: true

@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.GH_WORKFLOW }}
 
       - name: Setup Deno
-        # https://github.com/denoland/setup-deno
+        # https://github.com/marketplace/actions/setup-deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: "^1"
@@ -39,7 +39,7 @@ jobs:
       - name: Auto-commit changed files
         # Automatically commit files which have been changed during the workflow run and push changes back
         # to remote repository.
-        # https://github.com/stefanzweifel/git-auto-commit-action
+        # https://github.com/marketplace/actions/git-auto-commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "GenerRRRRR-ate image files from source!"
