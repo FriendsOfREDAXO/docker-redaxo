@@ -47,8 +47,6 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs: [collect]
-    outputs:
-      TAGLIST: ${{ steps.tags.outputs.taglist }}
 
     strategy:
       fail-fast: false
@@ -63,7 +61,6 @@ jobs:
           persist-credentials: false
 
       - name: Create tag list for image
-        id: tags
         # Create taglist
         # We make use of yp (https://mikefarah.gitbook.io/yq/) to create a JSON array from
         # the image’s `tags.yml` file, where all given tags (like `5-stable`, `5-edge`) are
@@ -74,8 +71,7 @@ jobs:
               "ghcr.io/friendsofredaxo/redaxo"
             )
             + ":" + .[]) | to_json(0)' ./images/${{ matrix.image }}/tags.yml)
-          echo $taglist
-          echo "taglist=$taglist" >> $GITHUB_OUTPUT
+          echo "TAGLIST=$taglist" >> $GITHUB_ENV
 
       - name: Set up QEMU
         # https://github.com/marketplace/actions/docker-setup-qemu
@@ -108,7 +104,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
-          tags: ${{ fromJson(needs.publish.outputs.TAGLIST) }}
+          tags: ${{ env.TAGLIST }}
 
       # - name: Update repo description
       #   # https://github.com/marketplace/actions/docker-hub-description
