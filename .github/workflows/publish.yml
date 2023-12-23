@@ -47,6 +47,8 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs: [collect]
+    outputs:
+      TAGLIST: ${{ steps.tags.outputs.taglist }}
 
     strategy:
       fail-fast: false
@@ -59,6 +61,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Create tag list for image
+        id: tags
+        # Create taglist
+        # We make use of yp (https://mikefarah.gitbook.io/yq/) to create a JSON array from
+        # the image’s `tags.yml` file, where all given tags (like `5-stable`, `5-edge`) are
+        # combined with all image registries (like ghcr, Docker Hub).
+        run: |
+          taglist=$(yq 'map(
+            (
+              "ghcr.io/friendsofredaxo/redaxo"
+            )
+            + ":" + .[]) | to_json(0)' ./images/${{ matrix.image }}/tags.yml)
+          echo $taglist
+          echo "taglist=$taglist" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         # https://github.com/marketplace/actions/docker-setup-qemu
@@ -83,13 +100,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Collect tags for image
-        # https://github.com/marketplace/actions/yq-portable-yaml-processor
-        uses: mikefarah/yq@master
-        id: collect_tags
-        with:
-          cmd: yq '.tags | @csv' ./images/${{ matrix.image }}/tags.yml
-
       - name: Build and push
         # https://github.com/marketplace/actions/build-and-push-docker-images
         uses: docker/build-push-action@v5
@@ -98,11 +108,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
-          # tags: |
-          #   ${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
-          #   ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
-          tags: |
-            ghcr.io/${{ env.REGISTRY_IMAGE }}:${{ steps.collect_tags.outputs.result }}
+          tags: ${{ fromJson(needs.publish.outputs.TAGLIST) }}
 
       # - name: Update repo description
       #   # https://github.com/marketplace/actions/docker-hub-description
