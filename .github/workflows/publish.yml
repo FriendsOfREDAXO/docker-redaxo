@@ -71,6 +71,7 @@ jobs:
               "ghcr.io/friendsofredaxo/redaxo"
             )
             + ":" + .[]) | to_json(0)' ./images/${{ matrix.image }}/tags.yml)
+          echo "$taglist"
           echo "TAGLIST=$taglist" >> $GITHUB_ENV
 
       - name: Set up QEMU
@@ -104,7 +105,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
-          tags: ${{ env.TAGLIST }}
+          tags: ${{ fromJson(env.TAGLIST) }}
 
       # - name: Update repo description
       #   # https://github.com/marketplace/actions/docker-hub-description
