@@ -1,0 +1,58 @@
+name: Test
+
+on:
+  pull_request:
+    paths:
+      - "images/**/*"
+
+concurrency:
+  # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  collect:
+    name: Collect images from directories
+    runs-on: ubuntu-latest
+    outputs:
+      IMAGES: ${{ steps.images.outputs.directories }}
+
+    steps:
+      - name: Checkout repository
+        # https://github.com/marketplace/actions/checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Collect images from directories
+        id: images
+        run: |
+          cd images
+          directories=$(tree -J -d -L 1 | jq -c '.[0].contents | map(.name)')
+          echo $directories
+          echo "directories=$directories" >> $GITHUB_OUTPUT
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [collect]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(needs.collect.outputs.IMAGES) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build and push
+        # https://github.com/marketplace/actions/build-and-push-docker-images
+        uses: docker/build-push-action@v5
+        with:
+          context: ./images/${{ matrix.image }}
+          load: true
+          tags: ${{ matrix.image }}

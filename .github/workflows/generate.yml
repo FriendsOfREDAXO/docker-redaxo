@@ -1,0 +1,49 @@
+name: Generate
+
+on:
+  pull_request:
+    paths:
+      - "source/**/*"
+
+concurrency:
+  # Cancel in-progress jobs if a new job is trigged by a commit from the same branch
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    name: Generate image files from source
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Ref is required if auto-commit action is used in pull requests.
+          # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
+          ref: ${{ github.head_ref }}
+          # Token is required to trigger new workflow runs after auto-commit action.
+          # https://github.com/stefanzweifel/git-auto-commit-action#commits-made-by-this-action-do-not-trigger-new-workflow-runs
+          token: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Setup Deno
+        # https://github.com/marketplace/actions/setup-deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "^1"
+
+      - name: Run generator script
+        run: deno task start
+
+      - name: Auto-commit changed files
+        # Automatically commit files which have been changed during the workflow run and push changes back
+        # to remote repository.
+        # https://github.com/marketplace/actions/git-auto-commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "GenerRRRRR-ate image files from source!"
+          commit_user_name: "FriendsOfREDAXO-T"
+          commit_user_email: "FriendsOfREDAXO-T@users.noreply.github.com"
+          commit_author: "FriendsOfREDAXO-T <FriendsOfREDAXO-T@users.noreply.github.com>"
+          file_pattern: "images/**/*"

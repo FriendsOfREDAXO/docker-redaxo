@@ -1,41 +1,26 @@
-# Docker community image for REDAXO
+# Docker image for REDAXO
 
-There’s no official Docker image for [REDAXO](https://github.com/redaxo/redaxo/) yet, but this one represents the __»official« community image__. It is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
+This image for [REDAXO](https://github.com/redaxo/redaxo/) CMS is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
 
-![Screenshot](https://raw.githubusercontent.com/redaxo/redaxo/assets/redaxo_02.png)
+![Screenshot](https://raw.githubusercontent.com/friendsofredaxo/docker-redaxo/assets/redaxo_02.webp)
 
-💁 Please note that REDAXO is completely raw after installation. If you’re new to REDAXO and would like to get to know the system, better check out one of the [demo website images](https://hub.docker.com/r/friendsofredaxo/demo)!
+It is published both on [Docker Hub](https://hub.docker.com/r/friendsofredaxo/redaxo) and on [GitHub Container Registry](https://github.com/FriendsOfREDAXO/docker-redaxo/pkgs/container/redaxo), so you can choose between:
+
+- `friendsofredaxo/redaxo`
+- `ghcr.io/friendsofredaxo/redaxo`
 
 
 ## Supported tags
 
-Tags follow this scheme: `REDAXO-PHP-Variant`.
-
-* __REDAXO version__ can include major or feature releases, such as: `5`, `5.15`.
-* __PHP versions__: `php8.1` _(default)_, `php8.2`
-* __Variants__: `apache` _(default)_, `fpm`
-
-As a __shorthand__, you can provide just the REDAXO version to use it with the default PHP version (8.1) and the default variant (Apache).
-
-Examples:
-
-* `5.15-php8.1-fpm`
-* `5.15-php8.1-apache`
-* `5-php8.1-apache`
-* `5` 🔥
-
-A [complete list of tags](https://hub.docker.com/r/friendsofredaxo/redaxo/tags) is available at Docker Hub.
-
-
-## Image variants
-
 We provide two image variants:
 
-* `apache` _(default)_  
-  This image comes with an **Apache webserver included** and brings PHP with common extensions required to work with REDAXO out of the box. It is designed to be used both as a throw away container (mount your source code and start the container to start your app), as well as the base to build other images off of.  
-  If you are unsure about what your needs are, you probably want to use this one.
-* `fpm`  
-  This image doesn’t include a webserver and only starts a PHP FPM container. Use this image if you already have a **separate webserver** running, which is often NGINX.
+- **Stable:** `5-stable`, `5`  
+  Contains the latest stable REDAXO 5.x version and the lowest PHP version with [active support](https://www.php.net/supported-versions.php).
+- **Edge:** `5-edge`  
+  Contains the latest REDAXO 5.x, even beta versions, and the latest PHP, even RC versions.
+	Use this image for development and testing.
+
+If you’re not sure, you probably want to go for `friendsofredaxo/redaxo:5` 🚀
 
 
 ## Environment variables
@@ -54,7 +39,7 @@ Database settings:
 * **`REDAXO_DB_NAME`**
 * **`REDAXO_DB_LOGIN`**
 * **`REDAXO_DB_PASSWORD`**
-* **`REDAXO_DB_CHARSET`**: `utf8mb4` charset is recommended for full emoji support 🙋 but requires at least MySQL 5.7.7 or MariaDB 10.2! Use `utf8` with older database systems :-(
+* **`REDAXO_DB_CHARSET`**: `utf8mb4` charset is recommended for full emoji support 🙋 but requires at least MySQL 5.7.7 or MariaDB 10.2! Use `utf8` with older database systems.
 
 Admin user to be created:
 
@@ -66,20 +51,18 @@ Admin user to be created:
 
 ## Usage
 
-Note that we use `friendsofredaxo/redaxo:5` for the code examples, which represents the latest REDAXO 5 with Apache and PHP 8.1 as our current default version.
+Note that we use `friendsofredaxo/redaxo:5` for the code examples.
 
 ### With [`docker run`](https://docs.docker.com/engine/reference/run/)
 
 Remember that REDAXO requires a [MySQL](https://hub.docker.com/_/mysql) or [MariaDB](https://hub.docker.com/_/mariadb) database. Could be either an external server or another Docker container.
 
-_Hint: We recommend to use at least MySQL 5.7.7 or MariaDB 10.2 for full emoji support via utf8mb4 charset!_
-
 ```bash
 $ docker run \
     --name my-redaxo-project \
     -d \
-    -p 20080:80 \
-    -e REDAXO_SERVER='http://localhost:20080' \
+    -p 80:80 \
+    -e REDAXO_SERVER='http://localhost' \
     -e REDAXO_SERVERNAME='My Website' \
     -e REDAXO_ERROR_EMAIL='john@doe.example' \
     -e REDAXO_LANG='en_gb' \
@@ -96,7 +79,7 @@ $ docker run \
 
 ### With [`docker-compose`](https://docs.docker.com/compose/reference/overview/)
 
-Example for REDAXO container with MySQL container:
+Example for REDAXO container with MariaDB container:
 
 ```yml
 version: '3'
@@ -105,11 +88,11 @@ services:
   redaxo:
     image: friendsofredaxo/redaxo:5
     ports:
-      - 20080:80
+      - 80:80
     volumes:
       - redaxo:/var/www/html
     environment:
-      REDAXO_SERVER: http://localhost:20080
+      REDAXO_SERVER: http://localhost
       REDAXO_SERVERNAME: 'My Website'
       REDAXO_ERROR_EMAIL: john@doe.example
       REDAXO_LANG: en_gb
@@ -123,7 +106,7 @@ services:
       REDAXO_ADMIN_PASSWORD: 'PunKisNOT!dead'
 
   db:
-    image: mysql:8
+    image: mariadb:10.11
     volumes:
       - db:/var/lib/mysql
     environment:
