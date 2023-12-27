@@ -17,8 +17,8 @@ We provide two image variants:
 - **Stable:** `5-stable`, `5`  
   Contains the latest stable REDAXO 5.x version and the lowest PHP version with [active support](https://www.php.net/supported-versions.php).
 - **Edge:** `5-edge`  
-  Contains the latest REDAXO 5.x, even beta versions, and the latest PHP, even RC versions.
-	Use this image for development and testing.
+  Contains the latest REDAXO 5.x, even beta versions, and the latest PHP, even RC versions.  
+  Use this image for development and testing.
 
 If you’re not sure, you probably want to go for `friendsofredaxo/redaxo:5` 🚀
 
