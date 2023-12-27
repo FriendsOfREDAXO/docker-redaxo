@@ -67,8 +67,8 @@ jobs:
         run: |
           taglist=$(yq 'map(
             (
-              "friendsofredaxo/redaxo",
-              "ghcr.io/friendsofredaxo/redaxo"
+              "${{ env.REGISTRY_IMAGE }}",
+              "ghcr.io/${{ env.REGISTRY_IMAGE }}"
             )
             + ":" + .[]) | to_csv' ./images/${{ matrix.image }}/tags.yml)
           echo "$taglist"
