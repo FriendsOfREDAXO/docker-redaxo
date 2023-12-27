@@ -11,15 +11,15 @@ const imagesDirectory = 'images';
 const imageConfiguration = parse(Deno.readTextFileSync(`${sourceDirectory}/images.yml`));
 
 if (!isObject(imageConfiguration)) {
-	console.error("Invalid image configuration!");
-	Deno.exit(1);
+  console.error("Invalid image configuration!");
+  Deno.exit(1);
 }
 
 const images = imageConfiguration["images"];
 
 if (!isArray(images)) {
-	console.error("Invalid images array!");
-	Deno.exit(1);
+  console.error("Invalid images array!");
+  Deno.exit(1);
 }
 
 /**
@@ -35,37 +35,37 @@ const dockerfileSource = Deno.readTextFileSync(`${sourceDirectory}/Dockerfile`);
 
 for (const image of images) {
 
-	const targetDir = `${imagesDirectory}/${image["name"]}`;
-	ensureDirSync(targetDir);
+  const targetDir = `${imagesDirectory}/${image["name"]}`;
+  ensureDirSync(targetDir);
 
-	/**
-	 * Generate Dockerfile
-	 */
-	const replacements: Record<string, string> = {
-		'%%PHP_VERSION_TAG%%': `${image["php-version"]}`,
-		'%%PACKAGE_URL%%': `${image["package-url"]}`,
-		'%%PACKAGE_SHA%%': `${image["package-sha"]}`,
-	};
-	let currentDockerfileSource = dockerfileSource;
-	Object.keys(replacements).forEach((key) => {
-		currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
-	});
+  /**
+   * Generate Dockerfile
+   */
+  const replacements: Record<string, string> = {
+    '%%PHP_VERSION_TAG%%': `${image["php-version"]}`,
+    '%%PACKAGE_URL%%': `${image["package-url"]}`,
+    '%%PACKAGE_SHA%%': `${image["package-sha"]}`,
+  };
+  let currentDockerfileSource = dockerfileSource;
+  Object.keys(replacements).forEach((key) => {
+    currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
+  });
 
-	Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
+  Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
-	/**
-	 * Copy static files that do not require replacements
-	 */
-	const filesToCopy = [
-		`docker-entrypoint.sh`,
-	];
-	filesToCopy.forEach(file => {
-		copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
-	})
+  /**
+   * Copy static files that do not require replacements
+   */
+  const filesToCopy = [
+    `docker-entrypoint.sh`,
+  ];
+  filesToCopy.forEach(file => {
+    copySync(`${sourceDirectory}/${file}`, `${targetDir}/${file}`);
+  })
 
-	/**
-	 * Generate tag list
-	 */
-	const tagList = stringify({ tags: image["tags"] });
-	Deno.writeTextFileSync(`${targetDir}/tags.yml`, tagList);
+  /**
+   * Generate tag list
+   */
+  const tagList = stringify({ tags: image["tags"] });
+  Deno.writeTextFileSync(`${targetDir}/tags.yml`, tagList);
 }
