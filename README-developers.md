@@ -11,7 +11,7 @@ Inhaltsverzeichnis:
 
 ### 1. Sourcen
 
-Im Ordner [`/source`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/source) befinden sich alle Vorlagen, die zum Bau der Images benötigt werden:
+Im Ordner `/source` befinden sich alle Vorlagen, die zum Bau der Images benötigt werden:
 
 - **[`Dockerfile`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/source/Dockerfile)**  
   Das Dockerfile für alle Image-Varianten, die wir anbieten. Es enthält verschiedene Platzhalter, z. B. `%%PHP_VERSION_TAG%%`, `%%PACKAGE_URL%%`, die später von den Skripten mit passenden Inhalten ersetzt werden, bevor es veröffentlicht wird.
@@ -24,25 +24,25 @@ Im Ordner [`/source`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main
 
 ### 2. Skripte
 
-Im Ordner [`/scripts`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/scripts) befinden sich Skripte für verschiedene Zwecke. Aktuell ist es nur eins:
+Im Ordner `/scripts` befinden sich Skripte für verschiedene Zwecke. Aktuell ist es nur eins:
 
 - **[`generate-image-files.ts`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/scripts/generate-image-files.ts)**  
-  Das Skript liest die Konfigurationsdatei ([`images.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/source/images.yml)) ein, um anschließend für jede darin enthaltene Image-Variante einen Ordner unter [`/images`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/images) anzulegen mit allen Dateien, die für das Bauen und Veröffentlichen benötigt werden. Platzhalter werden dabei ersetzt, wie oben beschrieben, und es wird eine zusätzliche YML-Datei `tags.yml` erstellt, die Angaben zu den Docker-Tags enthält.
+  Das Skript liest die Konfigurationsdatei (`images.yml`) ein, um anschließend für jede darin enthaltene Image-Variante einen Ordner unter `/images` anzulegen mit allen Dateien, die für das Bauen und Veröffentlichen benötigt werden. Platzhalter werden dabei ersetzt, wie oben beschrieben, und es wird eine zusätzliche YML-Datei `tags.yml` erstellt, die Angaben zu den Docker-Tags enthält.
 
 🍄 Wir benutzen [Deno](https://deno.com/) für die Skripte. Damit lassen sich recht einfach YML-Dateien auslesen, Platzhalter ersetzen und Aktionen im Dateisystem vornehmen. Womöglich einfacher als mit klassischen Shell-Skripten.
 
 
 ### 3. Images
 
-Im Ordner [`/images`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/images) liegen die finalen Baupläne für die verschiedenen Varianten unserer Docker-Images. Diese werden vollständig mit Hilfe der Skripte und Workflows generiert, so dass wir hier keine manuellen Anpassungen vornehmen.
+Im Ordner `/images` liegen die finalen Baupläne für die verschiedenen Varianten unserer Docker-Images. Diese werden vollständig mit Hilfe der Skripte und Workflows generiert, so dass wir hier keine manuellen Anpassungen vornehmen.
 
 
 ### 4. Workflows
 
-Im Ordner [`.github/workflows`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/.github/workflows) befinden sich die [GitHub-Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows):
+Im Ordner `.github/workflows` befinden sich die [GitHub-Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows):
 
 - **[`generate.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/generate.yml)**  
-  Der Workflow springt an, wenn innerhalb eines PRs Änderungen an den Sourcen ([`/source`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/source)) vorgenommen worden sind. Er benutzt das oben beschriebene Skript zum Generieren der Images und comittet die daraus entstehenden Änderungen in [`/images`](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/images) automatisch mit Hilfe des FOR-GitHub-Accounts.
+  Der Workflow springt an, wenn innerhalb eines PRs Änderungen an den Sourcen (`/source`) vorgenommen worden sind. Er benutzt das oben beschriebene Skript zum Generieren der Images und comittet die daraus entstehenden Änderungen in `/images` automatisch mit Hilfe des FOR-GitHub-Accounts.
 - **[`test.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/test.yml)**  
   Springt an, wenn innerhalb eines PRs die Images anpasst worden sind, also üblicherweise nach Durchlauf des Generate-Workflows. Er baut einmal testweise die neu generierten Images und stellt damit sicher, dass diese fehlerfrei starten.
 - **[`publish.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/publish.yml)**  
