@@ -42,7 +42,6 @@ else
   # hint: get options via `php redaxo/bin/console setup:run --help`
   echo >&2 "👉 Run setup..."
   setupArgs=(
-    "--agree-license"
     "--db-createdb=no"
     "--db-setup=normal"
   );
