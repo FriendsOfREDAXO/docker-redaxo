@@ -51,7 +51,7 @@ else
   [[ -n "$REDAXO_ERROR_EMAIL" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}");
   [[ -n "$REDAXO_TIMEZONE" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}");
   [[ -n "$REDAXO_DB_CHARSET" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}");
-  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}"); # required again!
+  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}");
   [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}");
   [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}");
 
