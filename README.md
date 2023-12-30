@@ -1,3 +1,5 @@
+[![Publish](https://github.com/FriendsOfREDAXO/docker-redaxo/actions/workflows/publish.yml/badge.svg)](https://github.com/FriendsOfREDAXO/docker-redaxo/actions/workflows/publish.yml)
+
 # Docker image for REDAXO
 
 This image for [REDAXO](https://github.com/redaxo/redaxo/) CMS is developed and maintained by [Friends Of REDAXO](https://github.com/FriendsOfREDAXO).
