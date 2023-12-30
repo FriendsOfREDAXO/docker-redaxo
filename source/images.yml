@@ -1,3 +1,12 @@
+# Images configuration
+#
+# Variants:
+# `5-stable`: stable REDAXO + the oldest PHP version with active support (https://www.php.net/supported-versions.php)
+# `5-edge`  : latest REDAXO (even beta) + latest PHP version (even RC)
+#
+# How to get the sha for a package:
+# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.15.1/redaxo_5.15.1.zip | shasum`
+
 images:
   - name: "5-stable"
     tags:
