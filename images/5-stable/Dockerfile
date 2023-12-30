@@ -62,7 +62,7 @@ RUN set -ex; \
     pdo_mysql \
     zip \
   ; \
-  # install imagick
+  # install imagick (currently disabled due to issues with PHP 8.2/8.3)
   # https://pecl.php.net/package/imagick
   # pecl install imagick-3.7.0; \
   # 	docker-php-ext-enable imagick; \
