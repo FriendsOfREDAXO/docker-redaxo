@@ -48,6 +48,12 @@ Admin user to be created:
 * **`REDAXO_ADMIN_USER`**
 * **`REDAXO_ADMIN_PASSWORD`**: must comply with the password policy (requires at least 8 chars)
 
+Installing addons
+
+* **`REDAXO_ADDONS`**: A whitespace separated list of addons to install
+
+To install addons from redaxo.org, use `addon-name`|`version`. To install addons from a URL, use `addon-name`|`url`.
+
 (See examples for `docker run` and `docker-compose` below)
 
 
@@ -76,6 +82,7 @@ $ docker run \
     -e REDAXO_DB_CHARSET='utf8mb4' \
     -e REDAXO_ADMIN_USER='admin' \
     -e REDAXO_ADMIN_PASSWORD='PunKisNOT!dead' \
+    -e REDAXO_ADDONS='adminer|1.9.0 rewrite_url|0.9.4' \
     friendsofredaxo/redaxo:5
 ```
 
