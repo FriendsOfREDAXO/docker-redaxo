@@ -72,6 +72,28 @@ else
   echo >&2 "🚀 REDAXO setup successful."
   echo >&2 " "
 
+  # install addons (if specified)
+  if [[ -n ${REDAXO_ADDONS} ]] ; then
+      echo >&2 "👉 Installing addons..."
+      IFS=' ' read -r -a addons <<< "${REDAXO_ADDONS}"
+
+      for addon in "${addons[@]}"
+      do
+          echo >&2 "👉 Installing addon ${addon}..."
+          IFS='|' read -r -a addoninfo <<< "${addon}"
+          if echo "${addoninfo[1]}" | grep "^http" &> /dev/null; then
+              curl -s -L "${addoninfo[1]}" -o /tmp/tmp.zip
+              cd redaxo/src/addons &>/dev/null
+              unzip /tmp/tmp.zip &>/dev/null
+              mv ${addoninfo[0]}* "${addoninfo[0]}"
+              cd - &>/dev/null
+          else
+              php redaxo/bin/console install:download "${addoninfo[0]}" "${addoninfo[1]}"
+          fi
+          php redaxo/bin/console package:install "${addoninfo[0]}"
+      done
+  fi
+
   # run custom setup (if available)
   # hint: enables child images to extend the setup process
   CUSTOM_SETUP="/usr/local/bin/custom-setup.sh";
