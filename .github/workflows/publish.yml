@@ -98,7 +98,7 @@ jobs:
 
       - name: Build and push
         # https://github.com/marketplace/actions/build-and-push-docker-images
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./images/${{ matrix.image }}
           platforms: linux/amd64,linux/arm64
@@ -145,7 +145,7 @@ jobs:
 
       - name: Delete untagged containers from GitHub Container Registry
         # https://github.com/marketplace/actions/delete-untagged-ghcr
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v3
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v4
         with:
           token: ${{ secrets.GH_PACKAGES }}
           untagged_only: true
