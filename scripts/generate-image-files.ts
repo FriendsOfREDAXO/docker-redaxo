@@ -7,9 +7,9 @@ const imagesDirectory = 'images';
 /**
  * Prepare image configuration
  */
-const imageConfiguration = parse(Deno.readTextFileSync(`${sourceDirectory}/images.yml`));
+const imageConfiguration = parse(Deno.readTextFileSync(`${sourceDirectory}/images.yml`)) as { images: [] };
 
-if (!(imageConfiguration !== null && typeof imageConfiguration === "object")) {
+if (imageConfiguration === null && typeof imageConfiguration !== "object") {
   console.error("Invalid image configuration!");
   Deno.exit(1);
 }
