@@ -1,6 +1,7 @@
 {
   "imports": {
-    "std/": "https://deno.land/std@0.217.0/"
+    "@std/fs": "jsr:@std/fs@^1.0.3",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5"
   },
   "tasks": {
     "lint": "deno lint",
