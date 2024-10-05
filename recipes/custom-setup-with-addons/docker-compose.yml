@@ -1,0 +1,33 @@
+services:
+
+  redaxo:
+    build: .
+    ports:
+      - 80:80
+    volumes:
+      - ./html:/var/www/html:cached
+    depends_on:
+      - db
+    environment:
+      REDAXO_SERVER: http://localhost
+      REDAXO_SERVERNAME: "REDAXO"
+      REDAXO_ERROR_EMAIL: mail@you.example
+      REDAXO_LANG: de_de
+      REDAXO_TIMEZONE: Europe/London
+      REDAXO_DB_HOST: db
+      REDAXO_DB_NAME: redaxo
+      REDAXO_DB_LOGIN: redaxo
+      REDAXO_DB_PASSWORD: redaxo
+      REDAXO_DB_CHARSET: utf8mb4
+      REDAXO_ADMIN_USER: admin
+      REDAXO_ADMIN_PASSWORD: admin123
+
+  db:
+    image: mysql:8
+    volumes:
+      - ./db:/var/lib/mysql:cached
+    environment:
+      MYSQL_DATABASE: redaxo
+      MYSQL_USER: redaxo
+      MYSQL_PASSWORD: redaxo
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
