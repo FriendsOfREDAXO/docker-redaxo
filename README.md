@@ -123,6 +123,16 @@ volumes:
   db:
 ```
 
+
+## Extend REDAXO setup via `custom-setup.sh` script 🚀
+
+After REDAXO has been successfully installed, a `/usr/local/bin/custom-setup.sh` script is executed, if it is available. This can be quite useful for pre-installing REDAXO addOns, updating configuration or further customizing the environment.
+
+For example, our [website demos](https://github.com/FriendsOfREDAXO/docker-demos) make use of it to auto-install demo packages via CLI. See [`custom-setup.sh`](https://github.com/FriendsOfREDAXO/docker-demos/blob/main/images/base/custom-setup.sh) of the base demo, copied via [`Dockerfile`](https://github.com/FriendsOfREDAXO/docker-demos/blob/main/images/base/Dockerfile) into the container.
+
+Also, a working recipe: [REDAXO + custom setup with pre-installed addons](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/recipes/custom-setup-with-addons)
+
+
 ## Recipes
 
 🧁 See [recipes](https://github.com/FriendsOfREDAXO/docker-redaxo/tree/main/recipes) section for further examples!
