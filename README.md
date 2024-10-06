@@ -27,6 +27,8 @@ If you’re not sure, you probably want to go for `friendsofredaxo/redaxo:5` �
 
 ## Environment variables
 
+🤖 **REDAXO is auto-installed** within the container if the web root is empty and all required environment variables are provided.
+
 System settings:
 
 * **`REDAXO_SERVER`**
