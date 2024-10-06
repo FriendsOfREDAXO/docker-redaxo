@@ -86,7 +86,6 @@ $ docker run \
 Example for REDAXO container with MariaDB container:
 
 ```yml
-version: '3'
 services:
 
   redaxo:
