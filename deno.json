@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@std/fs": "jsr:@std/fs@^1.0.3",
+    "@std/fs": "jsr:@std/fs@^1.0.4",
     "@std/yaml": "jsr:@std/yaml@^1.0.5"
   },
   "tasks": {
