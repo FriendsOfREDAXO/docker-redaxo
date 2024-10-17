@@ -29,9 +29,9 @@ jobs:
 
       - name: Setup Deno
         # https://github.com/marketplace/actions/setup-deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: "^1"
+          deno-version: "^2"
 
       - name: Run generator script
         run: deno task start

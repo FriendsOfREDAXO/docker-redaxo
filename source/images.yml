@@ -5,7 +5,7 @@
 # `5-edge`  : latest REDAXO (even beta) + latest PHP version (even RC)
 #
 # How to get the sha for a package:
-# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.15.1/redaxo_5.15.1.zip | shasum`
+# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.17.1/redaxo_5.17.1.zip | shasum`
 
 images:
   - name: "5-stable"
