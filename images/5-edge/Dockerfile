@@ -1,4 +1,4 @@
-FROM php:8.4-rc-apache
+FROM php:8.4-apache
 
 # install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
