@@ -20,4 +20,4 @@ images:
       - "5-edge"
     package-url: "https://github.com/redaxo/redaxo/releases/download/5.18.0/redaxo_5.18.0.zip"
     package-sha: "b2a9eb1c7bb12862d259bec42861ff29b30211c2"
-    php-version: "8.4-rc"
+    php-version: "8.4"
