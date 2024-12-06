@@ -12,12 +12,12 @@ images:
     tags:
       - "5-stable"
       - "5"
-    package-url: "https://github.com/redaxo/redaxo/releases/download/5.18.0/redaxo_5.18.0.zip"
-    package-sha: "b2a9eb1c7bb12862d259bec42861ff29b30211c2"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.18.1/redaxo_5.18.1.zip"
+    package-sha: "4f7c006cd7a63e2dbb8a12cb8477d6ed137d9f1f"
     php-version: "8.2"
   - name: "5-edge"
     tags:
       - "5-edge"
-    package-url: "https://github.com/redaxo/redaxo/releases/download/5.18.0/redaxo_5.18.0.zip"
-    package-sha: "b2a9eb1c7bb12862d259bec42861ff29b30211c2"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.18.1/redaxo_5.18.1.zip"
+    package-sha: "4f7c006cd7a63e2dbb8a12cb8477d6ed137d9f1f"
     php-version: "8.4"
