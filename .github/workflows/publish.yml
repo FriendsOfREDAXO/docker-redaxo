@@ -21,7 +21,7 @@ env:
 jobs:
   collect:
     name: Collect images from directories
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # Map step outputs to job outputs, so that the data can be used in upcoming jobs
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idoutputs
     outputs:
@@ -44,7 +44,7 @@ jobs:
 
   publish:
     name: Publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [collect]
 
     strategy:
@@ -108,7 +108,7 @@ jobs:
 
   update:
     name: Update
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [publish]
 
     steps:
