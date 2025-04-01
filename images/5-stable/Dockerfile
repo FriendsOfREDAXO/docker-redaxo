@@ -62,12 +62,12 @@ RUN set -ex; \
     pdo_mysql \
     zip \
   ; \
-  # install imagick (currently disabled due to issues with PHP 8.2/8.3)
+  # install imagick
   # https://pecl.php.net/package/imagick
-  # pecl install imagick-3.7.0; \
-  # 	docker-php-ext-enable imagick; \
-  # 	rm -r /tmp/pear; \
-  # \
+  pecl install imagick-3.8.0RC2; \
+    docker-php-ext-enable imagick; \
+    rm -r /tmp/pear; \
+  \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
   # see https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
   apt-mark auto '.*' > /dev/null; \
