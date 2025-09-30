@@ -90,10 +90,12 @@ RUN set -ex; \
 # install composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-# enable OPcache
+# enable OPcache (PHP < 8.5) and use recommended settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN set -eux; \
+  # enable opcache >>>
   docker-php-ext-enable opcache; \
+  # <<< enable opcache
   { \
     echo 'opcache.memory_consumption=128'; \
     echo 'opcache.interned_strings_buffer=8'; \
