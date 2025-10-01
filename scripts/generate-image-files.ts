@@ -50,6 +50,11 @@ for (const image of images) {
     currentDockerfileSource = currentDockerfileSource.replaceAll(key, replacements[key]);
   });
 
+  // Remove to enable OPcache in PHP 8.5, because it is already enabled by default
+  if (['8.5', '8.5-rc'].some(el => String(image["php-version"]).includes(el))) {
+    currentDockerfileSource = currentDockerfileSource.replaceAll(/(^\s*)(# enable opcache >>>)([\s\S]*?)(# <<< enable opcache)(\r?\n)/gm, '');
+  }
+
   Deno.writeTextFileSync(`${targetDir}/Dockerfile`, currentDockerfileSource);
 
   /**
