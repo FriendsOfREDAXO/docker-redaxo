@@ -64,13 +64,9 @@ RUN set -ex; \
   ; \
   # install imagick
   # https://pecl.php.net/package/imagick
-  # fetch from GitHub repository until a new PECL version with PHP 8.5 support is available
-  mkdir -p /usr/src/php/ext/imagick; \
-  curl -fsSL https://github.com/Imagick/imagick/archive/45adfb7b1e322eaa6174e88f7d5e27ef20e0596e.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1; \
-  docker-php-ext-install imagick; \
-  # pecl install imagick-3.8.0; \
-  #   docker-php-ext-enable imagick; \
-  #   rm -r /tmp/pear; \
+  pecl install imagick-3.8.1; \
+    docker-php-ext-enable imagick; \
+    rm -r /tmp/pear; \
   \
   # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
   # see https://github.com/docker-library/wordpress/blob/master/Dockerfile.template
