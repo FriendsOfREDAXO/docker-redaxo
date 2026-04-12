@@ -22,8 +22,8 @@ jobs:
 
     steps:
       - name: Checkout repository
-        # https://github.com/marketplace/actions/checkout
-        uses: actions/checkout@v4
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -47,13 +47,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
       - name: Build and push
-        # https://github.com/marketplace/actions/build-and-push-docker-images
-        uses: docker/build-push-action@v6
+        # https://github.com/docker/build-push-action
+        uses: docker/build-push-action@v7
         with:
           context: ./images/${{ matrix.image }}
           load: true

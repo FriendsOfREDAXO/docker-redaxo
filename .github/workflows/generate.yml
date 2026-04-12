@@ -18,7 +18,8 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
         with:
           # Ref is required if auto-commit action is used in pull requests.
           # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
@@ -28,7 +29,7 @@ jobs:
           token: ${{ secrets.GH_WORKFLOW }}
 
       - name: Setup Deno
-        # https://github.com/marketplace/actions/setup-deno
+        # https://github.com/denoland/setup-deno
         uses: denoland/setup-deno@v2
         with:
           deno-version: "^2"
@@ -39,8 +40,8 @@ jobs:
       - name: Auto-commit changed files
         # Automatically commit files which have been changed during the workflow run and push changes back
         # to remote repository.
-        # https://github.com/marketplace/actions/git-auto-commit
-        uses: stefanzweifel/git-auto-commit-action@v5
+        # https://github.com/stefanzweifel/git-auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "GenerRRRRR-ate image files from source!"
           commit_user_name: "FriendsOfREDAXO-T"
