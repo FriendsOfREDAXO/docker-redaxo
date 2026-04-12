@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -54,8 +54,8 @@ jobs:
 
     steps:
       - name: Checkout repository
-        # https://github.com/marketplace/actions/checkout
-        uses: actions/checkout@v4
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -74,31 +74,31 @@ jobs:
           echo "TAGLIST=$taglist" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        # https://github.com/marketplace/actions/docker-setup-qemu
-        uses: docker/setup-qemu-action@v3
+        # https://github.com/docker/setup-qemu-action
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        # https://github.com/marketplace/actions/docker-setup-buildx
-        uses: docker/setup-buildx-action@v3
+        # https://github.com/docker/setup-buildx-action
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to Docker Hub
-        # https://github.com/marketplace/actions/docker-login
-        uses: docker/login-action@v3
+        # https://github.com/docker/login-action
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        # https://github.com/marketplace/actions/docker-login
-        uses: docker/login-action@v3
+        # https://github.com/docker/login-action
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        # https://github.com/marketplace/actions/build-and-push-docker-images
-        uses: docker/build-push-action@v6
+        # https://github.com/docker/build-push-action
+        uses: docker/build-push-action@v7
         with:
           context: ./images/${{ matrix.image }}
           platforms: linux/amd64,linux/arm64
@@ -113,29 +113,29 @@ jobs:
 
     steps:
       - name: Checkout repository
-        # https://github.com/marketplace/actions/checkout
-        uses: actions/checkout@v4
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
       - name: Login to Docker Hub
-        # https://github.com/marketplace/actions/docker-login
-        uses: docker/login-action@v3
+        # https://github.com/docker/login-action
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        # https://github.com/marketplace/actions/docker-login
-        uses: docker/login-action@v3
+        # https://github.com/docker/login-action
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update repo description
-        # https://github.com/marketplace/actions/docker-hub-description
-        uses: peter-evans/dockerhub-description@v4
+        # https://github.com/peter-evans/dockerhub-description
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -144,8 +144,8 @@ jobs:
           enable-url-completion: true
 
       - name: Delete untagged containers from GitHub Container Registry
-        # https://github.com/marketplace/actions/delete-untagged-ghcr
-        uses: Chizkiyahu/delete-untagged-ghcr-action@v4
+        # https://github.com/chizkiyahu/delete-untagged-ghcr-action
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v6
         with:
           token: ${{ secrets.GH_PACKAGES }}
           untagged_only: true
