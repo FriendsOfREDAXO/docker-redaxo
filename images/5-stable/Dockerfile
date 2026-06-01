@@ -108,8 +108,8 @@ VOLUME /var/www/html
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
-  curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/5.21.0/redaxo_5.21.0.zip; \
-  echo "a045ea109cd6f1a50dbd0b2408de85c761230ff5 *redaxo.zip" | shasum -c -a 256; \
+  curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/5.21.1/redaxo_5.21.1.zip; \
+  echo "e0d84041722c471ed36e3f523809fe187e314540 *redaxo.zip" | shasum -c -a 256; \
   unzip -oq redaxo.zip -d /usr/src/redaxo; \
   rm redaxo.zip; \
   chown -R www-data:www-data /usr/src/redaxo
