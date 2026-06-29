@@ -5,19 +5,19 @@
 # `5-edge`  : latest REDAXO (even beta) + latest PHP version (even RC)
 #
 # How to get the sha for a package:
-# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.21.1/redaxo_5.21.1.zip | shasum`
+# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.21.2/redaxo_5.21.2.zip | shasum`
 
 images:
   - name: "5-stable"
     tags:
       - "5-stable"
       - "5"
-    package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.1/redaxo_5.21.1.zip"
-    package-sha: "e0d84041722c471ed36e3f523809fe187e314540"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.2/redaxo_5.21.2.zip"
+    package-sha: "ccb3a3ef330a3381db827cd25966de200df64607"
     php-version: "8.4"
   - name: "5-edge"
     tags:
       - "5-edge"
-    package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.1/redaxo_5.21.1.zip"
-    package-sha: "e0d84041722c471ed36e3f523809fe187e314540"
+    package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.2/redaxo_5.21.2.zip"
+    package-sha: "ccb3a3ef330a3381db827cd25966de200df64607"
     php-version: "8.5"
