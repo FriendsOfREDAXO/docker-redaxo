@@ -1,4 +1,4 @@
-FROM php:8.6-rc-apache
+FROM php:8.5-apache
 
 # install persistent PHP extensions (they won’t get purged afterwards)
 RUN set -eux; \
@@ -89,9 +89,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 # enable OPcache (PHP < 8.5) and use recommended settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN set -eux; \
-  # enable opcache >>>
-  docker-php-ext-enable opcache; \
-  # <<< enable opcache
   { \
     echo 'opcache.memory_consumption=128'; \
     echo 'opcache.interned_strings_buffer=8'; \
