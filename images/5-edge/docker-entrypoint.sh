@@ -93,3 +93,4 @@ fi
 
 # execute CMD
 exec "$@"
+# Test: Generate mit GITHUB_TOKEN – PR wird nicht gemergt
