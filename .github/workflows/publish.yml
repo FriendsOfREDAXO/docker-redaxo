@@ -147,7 +147,8 @@ jobs:
         # https://github.com/chizkiyahu/delete-untagged-ghcr-action
         uses: Chizkiyahu/delete-untagged-ghcr-action@v6
         with:
-          token: ${{ secrets.GH_PACKAGES }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          package_name: redaxo
           untagged_only: true
           owner_type: org
           except_untagged_multiplatform: true
