@@ -18,6 +18,10 @@ concurrency:
 env:
   REGISTRY_IMAGE: friendsofredaxo/redaxo
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   collect:
     name: Collect images from directories
