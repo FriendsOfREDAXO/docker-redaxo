@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # Ref is required if auto-commit action is used in pull requests.
           # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
