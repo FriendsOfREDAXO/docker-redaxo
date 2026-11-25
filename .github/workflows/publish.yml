@@ -109,6 +109,10 @@ jobs:
           push: true
           provenance: false
           tags: ${{ env.TAGLIST }}
+          # GHCR reads the package description and repository link from the manifest list (index) annotations
+          annotations: |
+            index:org.opencontainers.image.description=${{ github.event.repository.description }}
+            index:org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
   update:
     name: Update
