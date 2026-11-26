@@ -94,16 +94,16 @@ else
   setupArgs=(
     "--db-createdb=no"
     "--db-setup=normal"
-  );
-  [[ -n "${REDAXO_LANG:-}" ]] && setupArgs+=("--lang=${REDAXO_LANG}");
-  [[ -n "${REDAXO_SERVER:-}" ]] && setupArgs+=("--server=${REDAXO_SERVER}");
-  [[ -n "${REDAXO_SERVERNAME:-}" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}");
-  [[ -n "${REDAXO_ERROR_EMAIL:-}" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}");
-  [[ -n "${REDAXO_TIMEZONE:-}" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}");
-  [[ -n "${REDAXO_DB_CHARSET:-}" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}");
-  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}");
-  [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}");
-  [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}");
+  )
+  [[ -n "${REDAXO_LANG:-}" ]] && setupArgs+=("--lang=${REDAXO_LANG}")
+  [[ -n "${REDAXO_SERVER:-}" ]] && setupArgs+=("--server=${REDAXO_SERVER}")
+  [[ -n "${REDAXO_SERVERNAME:-}" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}")
+  [[ -n "${REDAXO_ERROR_EMAIL:-}" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}")
+  [[ -n "${REDAXO_TIMEZONE:-}" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}")
+  [[ -n "${REDAXO_DB_CHARSET:-}" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}")
+  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}")
+  [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}")
+  [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}")
 
   if php redaxo/bin/console setup:run -q -n "${setupArgs[@]}"; then
     setupInProgress=false
@@ -116,7 +116,7 @@ else
   fi
 
   # update file owner and group of writable folders (cache, data)
-  chown -R www-data:www-data redaxo/cache redaxo/data;
+  chown -R www-data:www-data redaxo/cache redaxo/data
 
   # done!
   echo >&2 " "
@@ -125,7 +125,7 @@ else
 
   # run custom setup (if available)
   # hint: enables child images to extend the setup process
-  CUSTOM_SETUP="/usr/local/bin/custom-setup.sh";
+  CUSTOM_SETUP="/usr/local/bin/custom-setup.sh"
   if [[ -x "$CUSTOM_SETUP" ]]; then
     echo >&2 "👉 Run custom setup..."
 
