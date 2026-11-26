@@ -70,20 +70,23 @@ else
   # remember the docker database container takes some time to init!
   echo >&2 "👉 Prepare database..."
   repeat=10
-  while ! php redaxo/bin/console -q db:set-connection \
+  dbOutput=""
+  # hint: no `-q` and stderr is captured as well, to be able to show the reason if the connection fails finally
+  until dbOutput="$(php redaxo/bin/console db:set-connection \
     "--host=${REDAXO_DB_HOST}" \
     "--database=${REDAXO_DB_NAME}" \
     "--login=${REDAXO_DB_LOGIN}" \
-    "--password=${REDAXO_DB_PASSWORD}" 2> /dev/null || false; do
-    if [[ repeat -eq 0 ]]; then
+    "--password=${REDAXO_DB_PASSWORD}" 2>&1)"; do
+    if (( repeat == 0 )); then
       echo >&2 "❌ Failed to connect database."
+      echo >&2 "${dbOutput}"
       exit 1
     fi
     repeat=$((repeat - 1))
-    sleep 5
     echo >&2 "⏳ Wait for database connection... ($repeat)"
+    sleep 5
   done
-  echo >&2 "✅ Database has been has been successfully connected."
+  echo >&2 "✅ Database has been successfully connected."
 
   # run REDAXO setup
   # hint: get options via `php redaxo/bin/console setup:run --help`
