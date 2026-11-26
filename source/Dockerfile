@@ -78,7 +78,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*
 
 # install composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # enable OPcache (PHP < 8.5) and use recommended settings
 # see https://secure.php.net/manual/en/opcache.installation.php
