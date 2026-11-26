@@ -1,9 +1,31 @@
 #!/bin/bash
 set -euo pipefail
 
+# environment variables that are required for the auto-setup
+requiredVars=(
+  REDAXO_DB_HOST
+  REDAXO_DB_NAME
+  REDAXO_DB_LOGIN
+  REDAXO_DB_PASSWORD
+  REDAXO_ADMIN_USER
+  REDAXO_ADMIN_PASSWORD
+)
+missingVars=()
+for var in "${requiredVars[@]}"; do
+  # hint: variables that are unset or empty count as missing
+  [[ -n "${!var:-}" ]] || missingVars+=("$var")
+done
+
 if [[ -n "$(ls -A)" ]]; then
   echo >&2 " "
   echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
+  echo >&2 " "
+
+elif [[ ${#missingVars[@]} -gt 0 ]]; then
+  # check this before anything is copied, otherwise a half-installed REDAXO would be left in the web root
+  echo >&2 " "
+  echo >&2 "❌ Required environment variables are missing: ${missingVars[*]}"
+  echo >&2 "   Skip REDAXO setup."
   echo >&2 " "
 
 else
@@ -45,12 +67,12 @@ else
     "--db-createdb=no"
     "--db-setup=normal"
   );
-  [[ -n "$REDAXO_LANG" ]] && setupArgs+=("--lang=${REDAXO_LANG}");
-  [[ -n "$REDAXO_SERVER" ]] && setupArgs+=("--server=${REDAXO_SERVER}");
-  [[ -n "$REDAXO_SERVERNAME" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}");
-  [[ -n "$REDAXO_ERROR_EMAIL" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}");
-  [[ -n "$REDAXO_TIMEZONE" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}");
-  [[ -n "$REDAXO_DB_CHARSET" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}");
+  [[ -n "${REDAXO_LANG:-}" ]] && setupArgs+=("--lang=${REDAXO_LANG}");
+  [[ -n "${REDAXO_SERVER:-}" ]] && setupArgs+=("--server=${REDAXO_SERVER}");
+  [[ -n "${REDAXO_SERVERNAME:-}" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}");
+  [[ -n "${REDAXO_ERROR_EMAIL:-}" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}");
+  [[ -n "${REDAXO_TIMEZONE:-}" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}");
+  [[ -n "${REDAXO_DB_CHARSET:-}" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}");
   [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}");
   [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}");
   [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}");
