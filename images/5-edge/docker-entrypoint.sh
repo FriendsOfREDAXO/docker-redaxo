@@ -1,12 +1,59 @@
 #!/bin/bash
 set -euo pipefail
 
+# environment variables that are required for the auto-setup
+requiredVars=(
+  REDAXO_DB_HOST
+  REDAXO_DB_NAME
+  REDAXO_DB_LOGIN
+  REDAXO_DB_PASSWORD
+  REDAXO_ADMIN_USER
+  REDAXO_ADMIN_PASSWORD
+)
+missingVars=()
+for var in "${requiredVars[@]}"; do
+  # hint: variables that are unset or empty count as missing
+  [[ -n "${!var:-}" ]] || missingVars+=("$var")
+done
+
+# Remove everything that has been put into the web root if the setup fails or is interrupted. The web root was empty
+# before, so this is safe. Without it, the next start would find a non-empty web root, skip the setup and run a
+# half-installed REDAXO.
+# hint: the cleanup only applies until the REDAXO setup (`setup:run`) has finished. It can be run again at that point
+# (the database setup is idempotent), but not afterwards, because the admin user exists then and the setup would
+# fail with "User already exists".
+setupInProgress=false
+cleanupFailedSetup() {
+  local exitCode=$?
+  if [[ "$setupInProgress" == true && $exitCode -ne 0 ]]; then
+    setupInProgress=false
+    echo >&2 "🧹 Clean up ${PWD} after failed setup..."
+    if [[ "$PWD" != "/" ]]; then
+      find . -mindepth 1 -delete || echo >&2 "⚠️ Could not remove all files from ${PWD}."
+    fi
+  fi
+}
+
 if [[ -n "$(ls -A)" ]]; then
   echo >&2 " "
   echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
   echo >&2 " "
 
+elif [[ ${#missingVars[@]} -gt 0 ]]; then
+  # check this before anything is copied, otherwise a half-installed REDAXO would be left in the web root
+  echo >&2 " "
+  echo >&2 "❌ Required environment variables are missing: ${missingVars[*]}"
+  echo >&2 "   Skip REDAXO setup."
+  echo >&2 " "
+
 else
+
+  # the cleanup runs on every exit, signals (e.g. `docker stop`) are turned into exits to trigger it
+  # hint: as PID 1 the script would ignore these signals otherwise
+  setupInProgress=true
+  trap cleanupFailedSetup EXIT
+  trap 'exit 143' TERM
+  trap 'exit 130' INT
 
   echo >&2 "👉 Start REDAXO setup..."
 
@@ -23,20 +70,23 @@ else
   # remember the docker database container takes some time to init!
   echo >&2 "👉 Prepare database..."
   repeat=10
-  while ! php redaxo/bin/console -q db:set-connection \
-    --host=$REDAXO_DB_HOST \
-    --database=$REDAXO_DB_NAME \
-    --login=$REDAXO_DB_LOGIN \
-    --password=$REDAXO_DB_PASSWORD 2> /dev/null || false; do
-    if [[ repeat -eq 0 ]]; then
+  dbOutput=""
+  # hint: no `-q` and stderr is captured as well, to be able to show the reason if the connection fails finally
+  until dbOutput="$(php redaxo/bin/console db:set-connection \
+    "--host=${REDAXO_DB_HOST}" \
+    "--database=${REDAXO_DB_NAME}" \
+    "--login=${REDAXO_DB_LOGIN}" \
+    "--password=${REDAXO_DB_PASSWORD}" 2>&1)"; do
+    if (( repeat == 0 )); then
       echo >&2 "❌ Failed to connect database."
+      echo >&2 "${dbOutput}"
       exit 1
     fi
     repeat=$((repeat - 1))
-    sleep 5
     echo >&2 "⏳ Wait for database connection... ($repeat)"
+    sleep 5
   done
-  echo >&2 "✅ Database has been has been successfully connected."
+  echo >&2 "✅ Database has been successfully connected."
 
   # run REDAXO setup
   # hint: get options via `php redaxo/bin/console setup:run --help`
@@ -44,28 +94,32 @@ else
   setupArgs=(
     "--db-createdb=no"
     "--db-setup=normal"
-  );
-  [[ -n "$REDAXO_LANG" ]] && setupArgs+=("--lang=${REDAXO_LANG}");
-  [[ -n "$REDAXO_SERVER" ]] && setupArgs+=("--server=${REDAXO_SERVER}");
-  [[ -n "$REDAXO_SERVERNAME" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}");
-  [[ -n "$REDAXO_ERROR_EMAIL" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}");
-  [[ -n "$REDAXO_TIMEZONE" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}");
-  [[ -n "$REDAXO_DB_CHARSET" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}");
-  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}");
-  [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}");
-  [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}");
+  )
+  [[ -n "${REDAXO_LANG:-}" ]] && setupArgs+=("--lang=${REDAXO_LANG}")
+  [[ -n "${REDAXO_SERVER:-}" ]] && setupArgs+=("--server=${REDAXO_SERVER}")
+  [[ -n "${REDAXO_SERVERNAME:-}" ]] && setupArgs+=("--servername=${REDAXO_SERVERNAME}")
+  [[ -n "${REDAXO_ERROR_EMAIL:-}" ]] && setupArgs+=("--error-email=${REDAXO_ERROR_EMAIL}")
+  [[ -n "${REDAXO_TIMEZONE:-}" ]] && setupArgs+=("--timezone=${REDAXO_TIMEZONE}")
+  [[ -n "${REDAXO_DB_CHARSET:-}" ]] && setupArgs+=("--db-charset=${REDAXO_DB_CHARSET}")
+  [[ -n "$REDAXO_DB_PASSWORD" ]] && setupArgs+=("--db-password=${REDAXO_DB_PASSWORD}")
+  [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}")
+  [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}")
 
-  if php redaxo/bin/console setup:run -q -n "${setupArgs[@]}"; then
+  # hint: no `-q`, the output is captured (stdout and stderr) and only shown if the setup fails.
+  # REDAXO masks the passwords in its output.
+  if setupOutput="$(php redaxo/bin/console setup:run -n "${setupArgs[@]}" 2>&1)"; then
+    setupInProgress=false
     echo >&2 "✅ REDAXO has been successfully installed."
   else
     echo >&2 " "
     echo >&2 "❌ REDAXO setup failed."
+    echo >&2 "${setupOutput}"
     echo >&2 " "
     exit 1
   fi
 
   # update file owner and group of writable folders (cache, data)
-  chown -R www-data:www-data redaxo/cache redaxo/data;
+  chown -R www-data:www-data redaxo/cache redaxo/data
 
   # done!
   echo >&2 " "
@@ -74,7 +128,7 @@ else
 
   # run custom setup (if available)
   # hint: enables child images to extend the setup process
-  CUSTOM_SETUP="/usr/local/bin/custom-setup.sh";
+  CUSTOM_SETUP="/usr/local/bin/custom-setup.sh"
   if [[ -x "$CUSTOM_SETUP" ]]; then
     echo >&2 "👉 Run custom setup..."
 
