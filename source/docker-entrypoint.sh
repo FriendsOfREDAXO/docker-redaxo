@@ -105,12 +105,15 @@ else
   [[ -n "$REDAXO_ADMIN_USER" ]] && setupArgs+=("--admin-username=${REDAXO_ADMIN_USER}")
   [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}")
 
-  if php redaxo/bin/console setup:run -q -n "${setupArgs[@]}"; then
+  # hint: no `-q`, the output is captured (stdout and stderr) and only shown if the setup fails.
+  # REDAXO masks the passwords in its output.
+  if setupOutput="$(php redaxo/bin/console setup:run -n "${setupArgs[@]}" 2>&1)"; then
     setupInProgress=false
     echo >&2 "✅ REDAXO has been successfully installed."
   else
     echo >&2 " "
     echo >&2 "❌ REDAXO setup failed."
+    echo >&2 "${setupOutput}"
     echo >&2 " "
     exit 1
   fi
