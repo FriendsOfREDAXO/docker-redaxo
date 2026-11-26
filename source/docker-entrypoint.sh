@@ -16,6 +16,24 @@ for var in "${requiredVars[@]}"; do
   [[ -n "${!var:-}" ]] || missingVars+=("$var")
 done
 
+# Remove everything that has been put into the web root if the setup fails or is interrupted. The web root was empty
+# before, so this is safe. Without it, the next start would find a non-empty web root, skip the setup and run a
+# half-installed REDAXO.
+# hint: the cleanup only applies until the REDAXO setup (`setup:run`) has finished. It can be run again at that point
+# (the database setup is idempotent), but not afterwards, because the admin user exists then and the setup would
+# fail with "User already exists".
+setupInProgress=false
+cleanupFailedSetup() {
+  local exitCode=$?
+  if [[ "$setupInProgress" == true && $exitCode -ne 0 ]]; then
+    setupInProgress=false
+    echo >&2 "🧹 Clean up ${PWD} after failed setup..."
+    if [[ "$PWD" != "/" ]]; then
+      find . -mindepth 1 -delete || echo >&2 "⚠️ Could not remove all files from ${PWD}."
+    fi
+  fi
+}
+
 if [[ -n "$(ls -A)" ]]; then
   echo >&2 " "
   echo >&2 "❌ ${PWD} is not empty! Skip REDAXO setup."
@@ -29,6 +47,13 @@ elif [[ ${#missingVars[@]} -gt 0 ]]; then
   echo >&2 " "
 
 else
+
+  # the cleanup runs on every exit, signals (e.g. `docker stop`) are turned into exits to trigger it
+  # hint: as PID 1 the script would ignore these signals otherwise
+  setupInProgress=true
+  trap cleanupFailedSetup EXIT
+  trap 'exit 143' TERM
+  trap 'exit 130' INT
 
   echo >&2 "👉 Start REDAXO setup..."
 
@@ -78,6 +103,7 @@ else
   [[ -n "$REDAXO_ADMIN_PASSWORD" ]] && setupArgs+=("--admin-password=${REDAXO_ADMIN_PASSWORD}");
 
   if php redaxo/bin/console setup:run -q -n "${setupArgs[@]}"; then
+    setupInProgress=false
     echo >&2 "✅ REDAXO has been successfully installed."
   else
     echo >&2 " "
