@@ -1,10 +1,11 @@
 FROM php:8.5-apache
 
-# install persistent PHP extensions (they won’t get purged afterwards)
+# install persistent packages (they won’t get purged afterwards)
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --quiet --no-install-recommends \
     ghostscript \
+    git \
     locales \
     unzip \
   ; \
@@ -35,17 +36,10 @@ RUN set -ex; \
     libfreetype6-dev \
     libjpeg-dev \
     libmagickwand-dev \
-    libmcrypt-dev \
     libpng-dev \
     libwebp-dev \
     libavif-dev \
     libzip-dev \
-  ; \
-  # install developer extensions
-  apt-get install -y --quiet --no-install-recommends \
-    git \
-    msmtp \
-    msmtp-mta \
   ; \
   # install and configure via docker-php-ext
   # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
@@ -84,7 +78,7 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*
 
 # install composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # enable OPcache (PHP < 8.5) and use recommended settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -105,14 +99,14 @@ VOLUME /var/www/html
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
-  curl -Ls -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip; \
-  echo "a536ab5a491819d00061b814c0ee7312f4bf486a *redaxo.zip" | shasum -c -a 256; \
+  curl -fsSL --retry 3 -o redaxo.zip https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip; \
+  echo "efc5f39151c52114700b040a075b93736e711921f846932966adb90e429e2dff *redaxo.zip" | sha256sum -c -; \
   unzip -oq redaxo.zip -d /usr/src/redaxo; \
   rm redaxo.zip; \
   chown -R www-data:www-data /usr/src/redaxo
 
 # copy and run entrypoint
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 # run CMD

@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -59,7 +59,7 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -109,6 +109,10 @@ jobs:
           push: true
           provenance: false
           tags: ${{ env.TAGLIST }}
+          # GHCR reads the package description and repository link from the manifest list (index) annotations
+          annotations: |
+            index:org.opencontainers.image.description=${{ github.event.repository.description }}
+            index:org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
   update:
     name: Update
@@ -118,7 +122,7 @@ jobs:
     steps:
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 

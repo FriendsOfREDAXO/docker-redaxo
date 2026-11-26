@@ -42,7 +42,7 @@ Im Ordner `/images` liegen die finalen Baupläne für die verschiedenen Variante
 Im Ordner `.github/workflows` befinden sich die [GitHub-Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows):
 
 - **[`generate.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/generate.yml)**  
-  Der Workflow springt an, wenn innerhalb eines PRs Änderungen an den Sourcen (`/source`) vorgenommen worden sind. Er benutzt das oben beschriebene Skript zum Generieren der Images und comittet die daraus entstehenden Änderungen in `/images` automatisch mit Hilfe des FOR-GitHub-Accounts.
+  Der Workflow springt an, wenn innerhalb eines PRs Änderungen an den Sourcen (`/source`) vorgenommen worden sind. Er benutzt das oben beschriebene Skript zum Generieren der Images und committet die daraus entstehenden Änderungen in `/images` automatisch.
 - **[`test.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/test.yml)**  
   Springt an, wenn innerhalb eines PRs die Images anpasst worden sind, also üblicherweise nach Durchlauf des Generate-Workflows. Er baut einmal testweise die neu generierten Images und stellt damit sicher, dass diese fehlerfrei starten.
 - **[`publish.yml`](https://github.com/FriendsOfREDAXO/docker-redaxo/blob/main/.github/workflows/publish.yml)**  

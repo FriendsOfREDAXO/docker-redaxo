@@ -11,9 +11,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Write access only for the auto-commit of generated files into the PR branch
+# The auto-commit is pushed with a GitHub App token (see below), so the built-in token only needs read access
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   generate:
@@ -21,17 +21,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Create GitHub App token
+        # Commits pushed with the built-in GITHUB_TOKEN do not trigger new workflow runs (so the tests would not run
+        # for the generated files). Commits pushed with a GitHub App token do.
+        # https://github.com/actions/create-github-app-token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.FRIENDSOFREDAXO_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.FRIENDSOFREDAXO_BOT_PRIVATE_KEY }}
+
       - name: Checkout repository
         # https://github.com/actions/checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # Ref is required if auto-commit action is used in pull requests.
           # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
           ref: ${{ github.head_ref }}
-          # Built-in token (no bot account needed). Note: commits pushed with it do not trigger new workflow runs –
-          # re-run the tests on the PR if needed.
-          # https://github.com/stefanzweifel/git-auto-commit-action#commits-made-by-this-action-do-not-trigger-new-workflow-runs
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # The auto-commit action pushes with the credentials of the checkout
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Deno
         # https://github.com/denoland/setup-deno
@@ -48,8 +56,8 @@ jobs:
         # https://github.com/stefanzweifel/git-auto-commit-action
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "GenerRRRRR-ate image files from source!"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          commit_message: "Generate image files from source"
+          commit_user_name: "friendsofredaxo-bot[bot]"
+          commit_user_email: "361493093+friendsofredaxo-bot[bot]@users.noreply.github.com"
+          commit_author: "friendsofredaxo-bot[bot] <361493093+friendsofredaxo-bot[bot]@users.noreply.github.com>"
           file_pattern: "images/**/*"
