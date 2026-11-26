@@ -102,8 +102,8 @@ VOLUME /var/www/html
 
 # fetch REDAXO, validate checksum and extract to tmp folder
 RUN set -e; \
-  curl -Ls -o redaxo.zip %%PACKAGE_URL%%; \
-  echo "%%PACKAGE_SHA%% *redaxo.zip" | shasum -c -a 256; \
+  curl -fsSL --retry 3 -o redaxo.zip %%PACKAGE_URL%%; \
+  echo "%%PACKAGE_SHA%% *redaxo.zip" | sha256sum -c -; \
   unzip -oq redaxo.zip -d /usr/src/redaxo; \
   rm redaxo.zip; \
   chown -R www-data:www-data /usr/src/redaxo
