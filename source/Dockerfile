@@ -109,7 +109,7 @@ RUN set -e; \
   chown -R www-data:www-data /usr/src/redaxo
 
 # copy and run entrypoint
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 # run CMD
