@@ -46,10 +46,10 @@ else
   echo >&2 "👉 Prepare database..."
   repeat=10
   while ! php redaxo/bin/console -q db:set-connection \
-    --host=$REDAXO_DB_HOST \
-    --database=$REDAXO_DB_NAME \
-    --login=$REDAXO_DB_LOGIN \
-    --password=$REDAXO_DB_PASSWORD 2> /dev/null || false; do
+    "--host=${REDAXO_DB_HOST}" \
+    "--database=${REDAXO_DB_NAME}" \
+    "--login=${REDAXO_DB_LOGIN}" \
+    "--password=${REDAXO_DB_PASSWORD}" 2> /dev/null || false; do
     if [[ repeat -eq 0 ]]; then
       echo >&2 "❌ Failed to connect database."
       exit 1
