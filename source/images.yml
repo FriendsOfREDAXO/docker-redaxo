@@ -4,8 +4,8 @@
 # `5-stable`: stable REDAXO + the oldest PHP version with active support (https://www.php.net/supported-versions.php)
 # `5-edge`  : latest REDAXO (even beta) + latest PHP version (even RC)
 #
-# How to get the sha for a package:
-# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip | shasum`
+# How to get the SHA-256 checksum for a package:
+# `curl -Ls https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip | shasum -a 256`
 
 images:
   - name: "5-stable"
@@ -13,11 +13,11 @@ images:
       - "5-stable"
       - "5"
     package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip"
-    package-sha: "a536ab5a491819d00061b814c0ee7312f4bf486a"
+    package-sha: "efc5f39151c52114700b040a075b93736e711921f846932966adb90e429e2dff"
     php-version: "8.4"
   - name: "5-edge"
     tags:
       - "5-edge"
     package-url: "https://github.com/redaxo/redaxo/releases/download/5.21.6/redaxo_5.21.6.zip"
-    package-sha: "a536ab5a491819d00061b814c0ee7312f4bf486a"
+    package-sha: "efc5f39151c52114700b040a075b93736e711921f846932966adb90e429e2dff"
     php-version: "8.5"
