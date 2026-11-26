@@ -1,10 +1,11 @@
 FROM php:%%PHP_VERSION_TAG%%-apache
 
-# install persistent PHP extensions (they won’t get purged afterwards)
+# install persistent packages (they won’t get purged afterwards)
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --quiet --no-install-recommends \
     ghostscript \
+    git \
     locales \
     unzip \
   ; \
@@ -40,12 +41,6 @@ RUN set -ex; \
     libwebp-dev \
     libavif-dev \
     libzip-dev \
-  ; \
-  # install developer extensions
-  apt-get install -y --quiet --no-install-recommends \
-    git \
-    msmtp \
-    msmtp-mta \
   ; \
   # install and configure via docker-php-ext
   # see https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions
